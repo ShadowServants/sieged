@@ -13,7 +13,7 @@ import (
 var (
     PORT = "8011"
     REDIS_POOL_SIZE = 30
-    REDIS_PORT = "6379"
+    REDIS_PORT = "6378"
     REDIS_IP = "localhost"
 )
 

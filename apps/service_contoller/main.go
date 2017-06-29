@@ -8,17 +8,12 @@ import (
 	"encoding/json"
 	"strconv"
 	"os/exec"
-	"./flag_handler"
-	"net"
 )
 
 var (
-	TCP_LISTENER_HOST = "0.0.0.0"
-	TCP_LISTENER_PORT = "31337"
     REDIS_POOL_SIZE = 70
-    REDIS_PORT = "6379"
+    REDIS_PORT = "6378"
     REDIS_IP = "localhost"
-	HANDLER_PORT = "8010"
 	CONTROLLER_PORT = "8009"
 )
 
@@ -50,16 +45,15 @@ func (sc *ServiceController) numTeamHandler(w http.ResponseWriter,r *http.Reques
 	team_num , _ :=strconv.Atoi(team_num_str)
 	conn, _ := sc.redis_pool.Get()
 	defer sc.redis_pool.Put(conn)
-	conn.Cmd("auth","polinadrink")
-	conn.Cmd("SET","teamnum",team_num)	
+	conn.Cmd("SET","teamnum",team_num)
 	sc.NumOfTeams = team_num
 }
 
 func (sc *ServiceController) initHandler(w http.ResponseWriter,r *http.Request) {
 	conn, err := sc.redis_pool.Get()
 	defer sc.redis_pool.Put(conn)
-	conn.Cmd("auth","polinadrink")
 	key := r.FormValue("key")
+
 	if key != "a123a"{
 		fmt.Fprint(w,"sorry")
 		return
@@ -72,6 +66,7 @@ func (sc *ServiceController) initHandler(w http.ResponseWriter,r *http.Request) 
 
 	team_num_str := r.FormValue("team_num")
 	team_num , _ := strconv.Atoi(team_num_str)
+	conn.Cmd("SET","teamnum")
 	sc.NumOfTeams = team_num
 	errors := make([]map[int]string,0)
 	for i:=1 ; i <= team_num; i++ {
@@ -99,14 +94,14 @@ func (sc *ServiceController) initHandler(w http.ResponseWriter,r *http.Request) 
 func (sc *ServiceController) getTeamIp(team_id string) string{
 	conn, _ := sc.redis_pool.Get()
 	defer sc.redis_pool.Put(conn)
-	conn.Cmd("auth","polinadrink")
 	result, _ := conn.Cmd("HGET","team_to_ip", team_id).Str()
 	return result
 }
 
 func (sc *ServiceController) teamChecker(round_id,team_id string, output chan string) {
 	ip := sc.getTeamIp(team_id)
-	cmd := exec.Command("time_table.py","-t",team_id,"-r",round_id,"--ip",ip,"-tl","3")
+	fmt.Println(ip)
+	cmd := exec.Command("simple_service.py","-t",team_id,"-r",round_id,"-ip",ip,"-tl","7")
 	stdout, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -126,7 +121,6 @@ type CheckerResponse struct {
 
 func (sc *ServiceController) roundHandler(w http.ResponseWriter,r *http.Request) {
 	conn, _ := sc.redis_pool.Get()
-	conn.Cmd("auth","polinadrink")
 	defer sc.redis_pool.Put(conn)
 	key := r.FormValue("key")
 	if key != "a123a"{
@@ -136,6 +130,7 @@ func (sc *ServiceController) roundHandler(w http.ResponseWriter,r *http.Request)
 	output := make(chan string,sc.NumOfTeams)
 	round := r.FormValue("round")
 	round_int, _ := strconv.Atoi(round)
+	conn.Cmd("SET","round_num",round_int)
 	for i:=1; i <= sc.NumOfTeams ; i++{
 		go sc.teamChecker(round,strconv.Itoa(i),output)
 	}
@@ -144,10 +139,9 @@ func (sc *ServiceController) roundHandler(w http.ResponseWriter,r *http.Request)
 		results = append(results,<-output)
 
 	}
+	fmt.Println(results)
 	response,_ := json.Marshal(results)
 	fmt.Fprint(w,string(response))
-	flag_handler.UpdateRound(round_int)
-	
 
 }
 
@@ -159,18 +153,10 @@ func main() {
 	}
 	conn, _ := redis_pool.Get()
 	defer redis_pool.Put(conn)
-	conn.Cmd("auth","polinadrink")
-	l, err := net.Listen("tcp", TCP_LISTENER_HOST+":"+TCP_LISTENER_PORT)
-	if err != nil {
-		fmt.Println("Error listening:", err.Error())
-		os.Exit(1)
-	}
+
 	num,_ := conn.Cmd("get","teamnum").Int()
 	fmt.Println("Controller started in",CONTROLLER_PORT)
-	fmt.Println("Handler started in ",HANDLER_PORT)
 	service := ServiceController{num,redis_pool,CONTROLLER_PORT}
-	fl_handler := flag_handler.FlagHandler{Listener:l,Redis_pool:redis_pool,PORT:HANDLER_PORT}
-	go fl_handler.StartPolling()
 	service.StartPolling()
 
 

@@ -8,7 +8,7 @@ import (
     "math"
     "encoding/json"
     "strings"
-    "../../helpers"
+    "github.com/jnovikov/hackforces/apps/helpers"
     "strconv"
 )
 
@@ -49,7 +49,16 @@ func (fh *FlagHandler) GetTeamIdByIp(ip_raw string) int {
 func (fh *FlagHandler) Init(listener net.Listener, pool *pool.Pool)  {
         fh.Redis_pool = pool
 }
+func (fh *FlagHandler) GetRound() int {
+    conn, _ := fh.Redis_pool.Get()
+    defer fh.Redis_pool.Put(conn)
+    result, err := conn.Cmd("GET","round_num").Int()
+    if err == nil {
+        panic("Redis is down")
+    }
+    return result
 
+}
 func (fh *FlagHandler) CheckFlag(flag string,from int) string {
         conn, err := fh.Redis_pool.Get()
         conn.Cmd("auth","polinadrink")
