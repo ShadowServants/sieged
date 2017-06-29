@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"github.com/streadway/amqp"
-	"github.com/johnnovikov/hackforces/back/libs/helpers"
+	"github.com/jnovikov/hackforces/back/libs/helpers"
 	"fmt"
 	"sync"
 

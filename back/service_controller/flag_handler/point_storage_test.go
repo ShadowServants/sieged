@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 	//"fmt"
-	"github.com/johnnovikov/hackforces/back/libs/storage"
+	"github.com/jnovikov/hackforces/back/libs/storage"
 )
 
 func TestLoadsPoints(t *testing.T) {

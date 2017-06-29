@@ -3,24 +3,34 @@ package main
 //import "github.com/johnnovikov/hackforces/back/service_controller/libs"
 import (
 	//"github.com/streadway/amqp"
-	"github.com/johnnovikov/hackforces/back/libs/rpc"
-	redigo "github.com/garyburd/redigo/redis"
+	"github.com/jnovikov/hackforces/back/libs/rpc"
+	//redigo "github.com/garyburd/redigo/redis"
 	"github.com/streadway/amqp"
-	"github.com/johnnovikov/hackforces/back/libs/helpers"
+	"github.com/jnovikov/hackforces/back/libs/helpers"
 	"sync"
 	"os"
 	"os/signal"
 	"syscall"
 	"log"
-	"github.com/johnnovikov/hackforces/back/libs/storage"
+	"github.com/jnovikov/hackforces/back/libs/storage"
 	"strconv"
 	"math"
 	"encoding/json"
 	"errors"
+	"github.com/jnovikov/hackforces/back/libs/flagstorage"
+	"fmt"
+	"github.com/jnovikov/hackforces/back/libs/flagdata"
 )
 
 
 //func handle(data string)
+
+const SelfFLagMessage = "Thats your own flag"
+const BadFlagMessage = "No such flag"
+const AlreadySubmitMessage = "You already submit this flag"
+const TeamNotFoundMessage = "Team not found"
+const FlagTooOldMessage = "Flag is too old"
+
 
 type TeamData struct {
 	id int
@@ -33,6 +43,7 @@ type Points struct {
 	Minus int `json:"minus"`
 	Points int `json:"points"`
 }
+
 
 
 
@@ -59,11 +70,15 @@ func NewTeamData(id int,points Points) *TeamData{
 
 type FlagHandler struct {
 	Teams map[int] *TeamData
-	Flags storage.Storage
-	Points PointsStorage
+	Flags *flagstorage.FlagStorage
+	Points *PointsStorage
 	TeamFlagsSet storage.KeySet
+	RoundSt *RoundStorage
 	NumOfTeams int
-	pool *redigo.Pool
+	RoundCached bool
+	CurrentRound int
+	RoundDelta int
+	//pool *redigo.Pool
 }
 
 func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int{
@@ -90,18 +105,17 @@ func (fh *FlagHandler) calc(att int, vict int) int{
 	attacker.points.Points += delta
 	attacker.points.Plus += 1
 	victim.points.Minus += 1
-	victim.points.Points -= delta
+	victim.points.Points = helpers.MaxInt(victim.points.Points-delta,0)
 	go fh.StoreData(*attacker,*victim)
 	return delta
 
 }
 
-func (fh *FlagHandler) CheckFlag(flag string) int {
-	if ids, err := fh.Flags.Get(flag); err != nil {
-		id, _ := strconv.Atoi(ids)
-		return id
+func (fh *FlagHandler) CheckFlag(flag string) *flagdata.FlagData {
+	if flag,err := fh.Flags.GetFlagData(flag); err == nil {
+		return flag
 	} else {
-		return -1
+		return nil
 	}
 
 }
@@ -112,33 +126,62 @@ func (fh *FlagHandler) StoreData(teams ...TeamData) {
 	}
 }
 
-func (fh *FlagHandler) Build(num int) {
+func (fh *FlagHandler) Build(num int,basepoints int) {
 	fh.NumOfTeams = num
-	for i:=0; i<num;i++{
+	fh.Teams = make(map[int]*TeamData)
+	for i:=1; i<=num;i++{
 		tp, err := fh.Points.GetPoints(strconv.Itoa(i))
 		if err != nil {
-			tp = &Points{0,0,0}
+			tp = &Points{0,0,basepoints}
 		}
-		//tpi, _ := strconv.Atoi(tp)
-		fh.Teams[i] = NewTeamData(i,*tp) //points
+		td := NewTeamData(i,*tp)
+		fh.Teams[i] =  td//points
+		fh.StoreData(*td)
+	}
+}
+
+func (fh *FlagHandler) GetTeamDataById(id int) (*TeamData,error){
+	if data,ok := fh.Teams[id]; ok {
+		return data,nil
+	}
+	return nil,errors.New("Cant get team")
+}
+
+func (fh *FlagHandler) GetCurrentRound() int {
+	if fh.RoundCached {
+		return fh.CurrentRound
+	} else {
+		return fh.RoundSt.GetRound()
 	}
 }
 
 func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool,string) {
+	if _,err := fh.GetTeamDataById(tr.Team); err != nil {
+		return false, TeamNotFoundMessage
+	}
 	exist := fh.TeamFlagsSet.Check(strconv.Itoa(tr.Team),tr.Flag)
 	if exist {
-		return false,"You already submit this flag"
+		return false, AlreadySubmitMessage
 	}
-	victim := fh.CheckFlag(tr.Flag)
-	if victim == -1 {
-		return false,"No such flag"
+	flag := fh.CheckFlag(tr.Flag)
+	if flag == nil {
+		return false, BadFlagMessage
 	}
+	victim := flag.Team
 	if victim == tr.Team {
-		return false,"Thats your own flag"
+		return false, SelfFLagMessage
 	}
+	if helpers.Abs(fh.GetCurrentRound()-flag.Round) >= fh.RoundDelta {
+		return false,FlagTooOldMessage
+	}
+
 	return true,""
 
 
+}
+
+func (fh *FlagHandler) SetCaptured(tr *TeamRequest) {
+	fh.TeamFlagsSet.Add(strconv.Itoa(tr.Team),tr.Flag)
 }
 
 func (fh *FlagHandler) HandleRequest(s string) string{
@@ -149,9 +192,10 @@ func (fh *FlagHandler) HandleRequest(s string) string{
 	if ok,response := fh.ValidateFlag(team_request); !ok {
 		return response
 	}
-	victim := fh.CheckFlag(team_request.Flag)
+	victim := fh.CheckFlag(team_request.Flag).Team
 	delta := fh.calc(team_request.Team,victim)
-	return strconv.Itoa(delta)
+	fh.SetCaptured(team_request)
+	return fmt.Sprintf("Congrats. You captured %d points",delta)
 
 }
 
@@ -176,5 +220,3 @@ func main()  {
 
 	mq.Close()
 }
-
-

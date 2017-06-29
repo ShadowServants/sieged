@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/johnnovikov/hackforces/back/libs/storage"
+	"github.com/jnovikov/hackforces/back/libs/storage"
 	"encoding/json"
 	"errors"
 )
