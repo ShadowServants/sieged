@@ -5,12 +5,14 @@ import (
 	"github.com/jnovikov/hackforces/back/libs/helpers"
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+	"sync"
 )
 
 func GetSimpleRedisExecutor() *RedisPoolExecutor{
-	conn,_ := redis.Dial("tcp",":6379")
+	conn,err := redis.Dial("tcp",":6379")
+	helpers.FailOnError(err,"Redis is down")
 	pool := helpers.NewPool(conn,1)
-	pool_exec := RedisPoolExecutor{pool}
+	pool_exec := RedisPoolExecutor{pool,sync.Mutex{}}
 	return &pool_exec
 
 }
@@ -68,4 +70,29 @@ func TestHsetRedisStorage_Get(t *testing.T) {
 		So(res,ShouldEqual,"value")
 
 	})
+}
+
+
+func TestRedisKeySet_Add(t *testing.T) {
+	executor := GetSimpleRedisExecutor()
+	keyset := RedisKeySet{executor}
+	Convey("Check redis keyset works",t,func(){
+		keyset.Add("first_key","1")
+		keyset.Add("first_key","2")
+	})
+	Convey("Check add was good",t,func(){
+		exist := keyset.Check("first_key","2")
+		exist1 := keyset.Check("first_key","1")
+
+		So(exist,ShouldEqual,true)
+		So(exist1,ShouldEqual,true)
+
+	})
+	Convey("Check bad data",t,func(){
+		exist := keyset.Check("first","1")
+		So(exist,ShouldEqual,false)
+		exist = keyset.Check("first_key","3")
+		So(exist,ShouldEqual,false)
+	})
+
 }

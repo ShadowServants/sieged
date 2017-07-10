@@ -1,14 +1,14 @@
 package helpers
 
 import (
-	"time"
 	"github.com/garyburd/redigo/redis"
 )
 
 func NewPool(conn redis.Conn,maxIdle int) *redis.Pool {
   return &redis.Pool{
-    MaxIdle: maxIdle,
-    IdleTimeout: 240 * time.Second,
+    MaxIdle: 1000,
+	MaxActive:0,
+  	Wait:true,
     Dial: func () (redis.Conn, error) { return conn,nil },
   }
 }

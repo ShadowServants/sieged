@@ -1,4 +1,4 @@
-package main
+package flaghandler
 
 import (
 	"github.com/jnovikov/hackforces/back/libs/storage"
@@ -23,11 +23,11 @@ func DumpPoints(p *Points) (string, error) {
 }
 
 type PointsStorage struct {
-	st storage.Storage
+	St storage.Storage
 }
 
 func (ps *PointsStorage) GetPoints(key string) (*Points,error){
-	s,err := ps.st.Get(key)
+	s,err := ps.St.Get(key)
 	if err != nil {
 		return nil,err
 	}
@@ -40,7 +40,7 @@ func (ps *PointsStorage) GetPoints(key string) (*Points,error){
 
 func (ps *PointsStorage) SetPoints(key string,points *Points) {
 	if data, err := DumpPoints(points); err == nil {
-		ps.st.Set(key,data)
+		ps.St.Set(key,data)
 	}
 
 }

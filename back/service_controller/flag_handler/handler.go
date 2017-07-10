@@ -1,35 +1,37 @@
-package main
+package flaghandler
 
 //import "github.com/johnnovikov/hackforces/back/service_controller/libs"
 import (
 	//"github.com/streadway/amqp"
-	"github.com/jnovikov/hackforces/back/libs/rpc"
+	//"github.com/jnovikov/hackforces/back/libs/rpc"
 	//redigo "github.com/garyburd/redigo/redis"
-	"github.com/streadway/amqp"
+	//"github.com/streadway/amqp"
 	"github.com/jnovikov/hackforces/back/libs/helpers"
 	"sync"
-	"os"
-	"os/signal"
-	"syscall"
-	"log"
+	//"os"
+	//"os/signal"
+	//"syscall"
+	//"log"
+	"github.com/jnovikov/hackforces/back/libs/flagresponse"
 	"github.com/jnovikov/hackforces/back/libs/storage"
 	"strconv"
 	"math"
 	"encoding/json"
 	"errors"
 	"github.com/jnovikov/hackforces/back/libs/flagstorage"
-	"fmt"
 	"github.com/jnovikov/hackforces/back/libs/flagdata"
+	"github.com/jnovikov/hackforces/back/libs/statusstorage"
 )
 
 
 //func handle(data string)
 
-const SelfFLagMessage = "Thats your own flag"
-const BadFlagMessage = "No such flag"
-const AlreadySubmitMessage = "You already submit this flag"
-const TeamNotFoundMessage = "Team not found"
-const FlagTooOldMessage = "Flag is too old"
+const SelfFLagMessage = "self"
+const BadFlagMessage = "invalid"
+const AlreadySubmitMessage = "already_submitted"
+const TeamNotFoundMessage = "team_not_found"
+const FlagTooOldMessage = "too_old"
+const BadTeamStatusMessage  = "not_ok"
 
 
 type TeamData struct {
@@ -53,6 +55,13 @@ type TeamRequest struct {
 
 }
 
+func DumpsTeamRequest(tr *TeamRequest) (string,error) {
+	byt, err := json.Marshal(tr)
+	if err != nil {
+		return "",err
+	}
+	return string(byt),nil
+}
 
 func LoadsTeamRequest(s string) (*TeamRequest, error){
 	tr := TeamRequest{}
@@ -74,7 +83,7 @@ type FlagHandler struct {
 	Points *PointsStorage
 	TeamFlagsSet storage.KeySet
 	RoundSt *RoundStorage
-	NumOfTeams int
+	StatusStorage *statusstorage.StatusStorage
 	RoundCached bool
 	CurrentRound int
 	RoundDelta int
@@ -95,12 +104,13 @@ func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int{
 func (fh *FlagHandler) calc(att int, vict int) int{
 	min := helpers.MinInt(att,vict)
 	max := helpers.MaxInt(att,vict)
+	attacker,_ := fh.GetTeamDataById(att)
+	victim,_ := fh.GetTeamDataById(vict)
+
 	fh.Teams[min].mu.Lock()
 	fh.Teams[max].mu.Lock()
 	defer fh.Teams[min].mu.Unlock()
 	defer fh.Teams[max].mu.Unlock()
-	attacker := fh.Teams[att]
-	victim := fh.Teams[vict]
 	delta := fh.calcDelta(attacker.points.Points,victim.points.Points)
 	attacker.points.Points += delta
 	attacker.points.Plus += 1
@@ -126,23 +136,27 @@ func (fh *FlagHandler) StoreData(teams ...TeamData) {
 	}
 }
 
-func (fh *FlagHandler) Build(num int,basepoints int) {
-	fh.NumOfTeams = num
+func (fh *FlagHandler) Build() {
 	fh.Teams = make(map[int]*TeamData)
-	for i:=1; i<=num;i++{
-		tp, err := fh.Points.GetPoints(strconv.Itoa(i))
-		if err != nil {
-			tp = &Points{0,0,basepoints}
-		}
-		td := NewTeamData(i,*tp)
-		fh.Teams[i] =  td//points
-		fh.StoreData(*td)
-	}
+	//for i:=1; i<=num;i++{
+	//	tp, err := fh.Points.GetPoints(strconv.Itoa(i))
+	//	if err != nil {
+	//		tp = &Points{0,0,basepoints}
+	//	}
+	//	td := NewTeamData(i,*tp)
+	//	fh.Teams[i] =  td//points
+	//	fh.StoreData(*td)
+	//}
 }
 
-func (fh *FlagHandler) GetTeamDataById(id int) (*TeamData,error){
+func (fh *FlagHandler)  GetTeamDataById(id int) (*TeamData,error){
 	if data,ok := fh.Teams[id]; ok {
 		return data,nil
+	}
+	if pts, err := fh.Points.GetPoints(strconv.Itoa(id)); err == nil {
+		td := NewTeamData(id,*pts)
+		fh.Teams[id] = td
+		return td,nil
 	}
 	return nil,errors.New("Cant get team")
 }
@@ -174,7 +188,12 @@ func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool,string) {
 	if helpers.Abs(fh.GetCurrentRound()-flag.Round) >= fh.RoundDelta {
 		return false,FlagTooOldMessage
 	}
-
+	if fh.StatusStorage.GetStatus(tr.Team,fh.GetCurrentRound()) != "Up" {
+		return false,BadTeamStatusMessage
+	}
+		//fmt.Println(data,err.Error())
+	 	//return false, BadTeamStatusMessage
+	//}
 	return true,""
 
 
@@ -189,34 +208,46 @@ func (fh *FlagHandler) HandleRequest(s string) string{
 	if err != nil {
 		return "Bad request"
 	}
-	if ok,response := fh.ValidateFlag(team_request); !ok {
-		return response
+	response := flagresponse.HandlerResponse{}
+	response.Type = "steal"
+	response.Initiator = team_request.Team
+	if ok,response_text := fh.ValidateFlag(team_request); !ok {
+		response.Reason = response_text
+		response.Successful = false
+		response.Target = -1
+		resp, _ := flagresponse.DumpHandlerResponse(&response)
+		return resp
 	}
+	response.Successful = true
 	victim := fh.CheckFlag(team_request.Flag).Team
+	response.Target = victim
 	delta := fh.calc(team_request.Team,victim)
 	fh.SetCaptured(team_request)
-	return fmt.Sprintf("Congrats. You captured %d points",delta)
+	response.Delta = delta
+
+	resp, _ := flagresponse.DumpHandlerResponse(&response)
+	return resp
 
 }
 
 
-func main()  {
-	conn , err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	helpers.FailOnError(err,"Cant connect to rabbit")
-	defer conn.Close()
-	a_handler:= new(rpc.AckHandler)
-	a_handler.Init()
-
-	mq := new(rpc.RabbitMqRpc)
-	defer mq.Close()
-	mq.Connection = conn
-	mq.Build("flags_rpc",1)
-	mq.Handler = a_handler
-	go mq.Handle()
-
-	ch := make(chan os.Signal)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
-	log.Println(<-ch)
-
-	mq.Close()
-}
+//func main()  {
+//	conn , err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+//	helpers.FailOnError(err,"Cant connect to rabbit")
+//	defer conn.Close()
+//	a_handler:= new(rpc.AckHandler)
+//	a_handler.Init()
+//
+//	mq := new(rpc.RabbitMqRpc)
+//	defer mq.Close()
+//	mq.Connection = conn
+//	mq.Build("flags_rpc",1)
+//	mq.Handler = a_handler
+//	go mq.Handle()
+//
+//	ch := make(chan os.Signal)
+//	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+//	log.Println(<-ch)
+//
+//	mq.Close()
+//}

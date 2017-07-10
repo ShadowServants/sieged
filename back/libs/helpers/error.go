@@ -3,6 +3,7 @@ package helpers
 import (
 	"log"
 	"fmt"
+	"bytes"
 )
 
 func FailOnError(err error, msg string) {
@@ -35,4 +36,14 @@ func Abs(x int) int {
 		return 0 // return correctly abs(-0)
 	}
 	return x
+}
+
+
+func FromBytesToString(buf []byte) string {
+	n := bytes.IndexByte(buf, 0)
+	e := bytes.IndexByte(buf,10)
+	if (n - e == 1){
+		return string(buf[:e])
+	}
+	return string(buf[:n])
 }

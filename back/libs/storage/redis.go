@@ -4,20 +4,35 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"errors"
 	"github.com/jnovikov/hackforces/back/libs/helpers"
+	"fmt"
+	"sync"
 )
 
 
+func GetRedisExecutor(port string,pool_size int) *RedisPoolExecutor{
+	conn,err := redis.Dial("tcp",":"+port)
+	helpers.FailOnError(err,"Redis is down")
+	pool := helpers.NewPool(conn,pool_size)
+	pool_exec := RedisPoolExecutor{pool,sync.Mutex{}}
+	return &pool_exec
+
+}
+
 type RedisPoolExecutor struct {
 	Pool *redis.Pool
+	mu sync.Mutex
 }
 
 
 func (re *RedisPoolExecutor) Exec(command string,args...string) (interface {},error) {
+	re.mu.Lock()
+	defer re.mu.Unlock()
 	real_args := make([]interface{},len(args))
 	for k,v := range args {
 		real_args[k] = v
 	}
 	red := re.Pool.Get()
+
 	defer red.Close()
 	return red.Do(command,real_args...)
 }
@@ -48,6 +63,7 @@ func (rs *BaseRedisStorage) Get(command string,args...string) (string,error) {
 func (rs *BaseRedisStorage) Set(command string,args...string) () {
 	_, err := rs.Redis.Exec(command,args...)
 	if err != nil {
+		fmt.Println("BAD",command,args, err.Error())
 		helpers.FailOnError(err,"Redis error") //?
 		//Write to logfile or panic ?
 		return
@@ -94,7 +110,8 @@ func (ks *RedisKeySet) Check(key string, value string) bool {
 		//Panic ?
 		return false
 	}
-	if res, ok := exist.(int); ok {
+
+	if res, ok := exist.(int64); ok {
 		return res != 0
 	}
 	return false

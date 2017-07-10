@@ -1,4 +1,4 @@
-package main
+package flaghandler
 
 import (
 	"testing"
@@ -7,6 +7,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/jnovikov/hackforces/back/libs/flagstorage"
 	"github.com/jnovikov/hackforces/back/libs/flagdata"
+	"fmt"
+	"github.com/jnovikov/hackforces/back/libs/statusstorage"
 )
 
 
@@ -34,7 +36,15 @@ func BuildTestFlagHandler() *FlagHandler {
 	fl.RoundDelta = 3
 	fl.CurrentRound = 1
 	fl.RoundCached = false
-	fl.Build(3,1700)
+	ss := storage.SimpleStorage{}
+	ss.Init()
+ 	fl.StatusStorage = statusstorage.NewStatusStorage(&ss)
+	fl.Points.SetPoints("1",&Points{0,0,1700})
+	fl.Points.SetPoints("2",&Points{0,0,1700})
+	fl.Points.SetPoints("3",&Points{0,0,1700})
+
+
+	fl.Build()
 	return &fl
 }
 
@@ -54,13 +64,17 @@ func TestFlagHandler_calc(t *testing.T) {
 		attacker := 1
 		victim := 2
 		res := fl.calc(attacker,victim)
+		attacker_data,_ := fl.GetTeamDataById(attacker)
+		victim_data,_ := fl.GetTeamDataById(victim)
+
+
 		So(res,ShouldAlmostEqual,15)
-		So(fl.Teams[attacker].points.Plus,ShouldEqual,1)
-		So(fl.Teams[attacker].points.Minus,ShouldEqual,0)
-		So(fl.Teams[victim].points.Plus,ShouldEqual,0)
-		So(fl.Teams[victim].points.Minus,ShouldEqual,1)
-		So(fl.Teams[attacker].points.Points,ShouldAlmostEqual,1715)
-		So(fl.Teams[victim].points.Points,ShouldAlmostEqual,1685)
+		So(attacker_data.points.Plus,ShouldEqual,1)
+		So(attacker_data.points.Minus,ShouldEqual,0)
+		So(victim_data.points.Plus,ShouldEqual,0)
+		So(victim_data.points.Minus,ShouldEqual,1)
+		So(attacker_data.points.Points,ShouldAlmostEqual,1715)
+		So(victim_data.points.Points,ShouldAlmostEqual,1685)
 	})
 	Convey("Check team 2 attacks team 1",t,func(){
 		attacker := 2
@@ -87,7 +101,7 @@ func TestFlagHandler_calc(t *testing.T) {
 
 func TestFlagHandler_Build(t *testing.T) {
 	fl := BuildTestFlagHandler()
-	td := fl.Teams[1]
+	td,_ := fl.GetTeamDataById(1)
 	Convey("Check that base points are ok",t,func(){
 		So(td.points.Points,ShouldEqual,1700)
 		So(td.points.Minus,ShouldEqual,0)
@@ -110,7 +124,7 @@ func TestLoadsTeamRequest(t *testing.T) {
 		So(tr.Flag,ShouldEqual,"flagflag")
 		So(tr.Team,ShouldEqual,1)
 	})
-	d = `{"team": "hkjkjk","flag": "flagflag","bad":"Bad"}`
+	d = `{"team": "hkjkjk","flag": 1}`
 	tr,err = LoadsTeamRequest(d)
 	Convey("Check json team requests loads failed",t,func(){
 		So(err,ShouldNotEqual,nil)
@@ -167,6 +181,8 @@ func TestFlagHandler_ValidateFlag(t *testing.T) {
 	})
 	tr.Team = 2
 	tr.Flag = "flagflag"
+	fl.StatusStorage.SetStatus(2,1,"Up")
+
 	Convey("Check capture",t,func(){
 		ok, msg := fl.ValidateFlag(&tr)
 		So(ok,ShouldEqual,true)
@@ -184,9 +200,7 @@ func TestFlagHandler_ValidateFlag(t *testing.T) {
 
 func TestFlagHandler_HandleRequest(t *testing.T) {
 	fl := BuildTestFlagHandler()
-	Convey("Create simple flag handler with 3 teams", t, func() {
-		So(len(fl.Teams),ShouldEqual,3)
-	})
+	fl.StatusStorage.SetStatus(2,1,"Up")
 	//Give first team 2 flags
 	fd1 := flagdata.FlagData{1,1}
 	fd2 := flagdata.FlagData{1,2}
@@ -194,23 +208,31 @@ func TestFlagHandler_HandleRequest(t *testing.T) {
 	fl.Flags.SetFlagData("flagteam1_1",&fd2)
 	query := `{"team": 2,"flag": "notflag"}`
 	Convey("Check team solve bad flag",t,func(){
-		So(fl.HandleRequest(query),ShouldEqual,BadFlagMessage)
+		So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"successful":false,"type":"steal","initiation":2,"target":-1,"delta":0,"reason":"%s"}`,BadFlagMessage))
 	})
 	query = `{"team": 1,"flag": "flagteam1"}`
 	Convey("Check team own flag",t,func(){
-		So(fl.HandleRequest(query),ShouldEqual,SelfFLagMessage)
+		So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"successful":false,"type":"steal","initiation":1,"target":-1,"delta":0,"reason":"%s"}`,SelfFLagMessage))
+
 	})
 	query = `{"team": 2,"flag": "flagteam1"}`
 	Convey("Check captured flag",t,func(){
-		So(fl.HandleRequest(query),ShouldEqual,"Congrats. You captured 15 points")
+
+		So(fl.HandleRequest(query),ShouldEqual,`{"successful":true,"type":"steal","initiation":2,"target":1,"delta":15,"reason":""}`)
 	})
 	Convey("Check team try to catpure flag again",t,func(){
-		So(fl.HandleRequest(query),ShouldEqual,AlreadySubmitMessage)
+		So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"successful":false,"type":"steal","initiation":2,"target":-1,"delta":0,"reason":"%s"}`,AlreadySubmitMessage))
+
+		//So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"ok":false,"text":"%s"}`,AlreadySubmitMessage))
+		//So(fl.HandleRequest(query),ShouldEqual,AlreadySubmitMessage)
 	})
 	fl.RoundSt.SetRound(6)
 	query = `{"team": 2,"flag": "flagteam1_1"}`
 	Convey("Check flag is too old",t,func(){
-		So(fl.HandleRequest(query),ShouldEqual,FlagTooOldMessage)
+		So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"successful":false,"type":"steal","initiation":2,"target":-1,"delta":0,"reason":"%s"}`,FlagTooOldMessage))
+
+		//So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"ok":false,"text":"%s"}`,FlagTooOldMessage))
+		//So(fl.HandleRequest(query),ShouldEqual,FlagTooOldMessage)
 	})
 
 
