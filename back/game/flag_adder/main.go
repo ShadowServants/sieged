@@ -59,10 +59,10 @@ func indexHandler(w http.ResponseWriter,r *http.Request){
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	Rp := new(storage.RadixPool)
-	Rp.Build("localhost","6379",10)
+	Rp.Build("127.0.0.1","6379",7)
 	Stor = storage.HsetRadixStorage{Rp,"flags"}
 	http.HandleFunc("/",indexHandler)
-	http.ListenAndServe(":"+PORT,nil)
+	http.ListenAndServe("127.0.0.1"+":"+PORT,nil)
 }
 
 

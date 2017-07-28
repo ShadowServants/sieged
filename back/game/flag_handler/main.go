@@ -11,7 +11,7 @@ import (
 func main() {
 	fl := flaghandler.FlagHandler{}
 	Rp := new(storage.RadixPool)
-	Rp.Build("localhost","6379",10)
+	Rp.Build("127.0.0.1","6379",25)
 	//executor := storage.GetRedisExecutor("6379",10)
 	//defer executor.Close()
 	ps := storage.HsetRadixStorage{Rp,"points"}
@@ -30,14 +30,14 @@ func main() {
 	roundst := &flaghandler.RoundStorage{&rs}
 	fl.RoundSt = roundst
 	fl.Flags = flags
-	fl.RoundDelta = 3
+	fl.RoundDelta = 5
 	fl.RoundCached = false
 	ss := storage.HsetRadixStorage{Rp,"statuses"}
 	//ss := storage.HsetRedisStorage{storage.BaseRedisStorage{executor},"statuses"}
 	statuses := statusstorage.NewStatusStorage(&ss)
 	fl.StatusStorage = statuses
 	fl.Build()
-	rpc_tcp := rpc.TcpRpc{"7878","localhost",&fl}
+	rpc_tcp := rpc.TcpRpc{"7878","127.0.0.1",&fl}
 	rpc_tcp.Handle()
 
 }

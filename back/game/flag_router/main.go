@@ -128,9 +128,9 @@ func (fh *FlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 func (fh *FlagRouter) StartPolling() {
 		Rp := new(storage.RadixPool)
-		Rp.Build("localhost","6379",30)
+		Rp.Build("127.0.0.1","6379",27)
 		fh.IpStorage = &storage.HsetRadixStorage{Rp,"player_ip_to_team"}
-		fh.Conn_pool = NewTcpPool("localhost","7878",30)
+		fh.Conn_pool = NewTcpPool("127.0.0.1","7878",27)
         http.HandleFunc("/",fh.handleRequest)
         http.ListenAndServe("0.0.0.0:"+fh.Port,nil)
 }
@@ -138,7 +138,7 @@ func (fh *FlagRouter) StartPolling() {
 
 func main() {
 	fr := new(FlagRouter)
-	fr.VisualisationUrl = "http://192.168.88.131:3000/broadcast"
+	fr.VisualisationUrl = "http://127.0.0.1:3000/broadcast"
 	fr.VisualisationEnabled = true
 	fr.Port = "7331"
 	fr.StartPolling()

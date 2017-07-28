@@ -1,0 +1,405 @@
+panic: runtime error: slice bounds out of range
+
+goroutine 777 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42045d110, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420073b90, 0x13bf2e0, 0xc420080dc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a050)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 36 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42012e410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420081b90, 0x13bf2e0, 0xc42011e058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 34 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a000)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 76 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420123380, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc4201001d0)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a050)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 6 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42006edd0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42000e238)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 6 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42006ef70, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42000e1e8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 66 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420079860, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc4200802b0)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 20 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 36 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201164e0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010c060)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 34 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a000)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201221a0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420120048)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010c000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420102008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420108000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 224 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42020cdd0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc4201484b8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 38 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116680, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a080)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 22 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201064e0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420102068)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 5 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420073b90, 0x13bf2e0, 0xc42000e060)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 21 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201084e0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100068)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 20 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010c410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 36 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42012a5b0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420120060)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 228 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42016bc70, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420166218)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 5 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010c410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc42000e068)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 21 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420108270, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420104018)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 7 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42006f110, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42000e1f0)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 4 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420126000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc42000e018)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 258 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201bf040, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420120438)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 50 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420134000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc420130000)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420108000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420102008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 22 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42014a1a0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100068)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 51 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42014c4e0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc420154058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420120410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420075b90, 0x13bf2e0, 0xc420114058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 34 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42013a000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420130000)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 20 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010c410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 37 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420144270, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420130038)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 20 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42013a0d0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100018)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 19 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420124340, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100050)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 34 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420132000, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420120008)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 20 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc42010a410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420100058)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc420116410, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc42010a050)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
+panic: runtime error: slice bounds out of range
+
+goroutine 35 [running]:
+github.com/jnovikov/hackforces/back/libs/helpers.FromBytesToString(0xc4201300d0, 0xc8, 0xc8, 0xc8, 0xc8)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/helpers/error.go:48 +0x12d
+github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).handleRequest(0xc420015c50, 0x13bf2e0, 0xc420122010)
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:21 +0xba
+created by github.com/jnovikov/hackforces/back/libs/rpc.(*TcpRpc).Handle
+	/Users/john/dev/go/src/github.com/jnovikov/hackforces/back/libs/rpc/tcp.go:44 +0x23e
