@@ -5,8 +5,9 @@ import (
 	"github.com/jnovikov/hackforces/back/libs/team_list"
 
 	"strconv"
-	"github.com/jnovikov/hackforces/back/service_controller/flag_handler"
+	//"github.com/jnovikov/hackforces/back/service_controller/flag_handler"
 	"github.com/jnovikov/hackforces/back/libs/statusstorage"
+	"github.com/jnovikov/hackforces/back/service_controller/flag_handler"
 	"sync"
 	"os/exec"
 	"errors"
@@ -18,6 +19,7 @@ type RoundHandler struct {
 	Wg sync.WaitGroup
 	IpStorage storage.Storage
 	TeamStorage storage.Storage
+	Points *flaghandler.PointsStorage
 	St *statusstorage.StatusStorage
 	TeamIds []int
 	Rounds *flaghandler.RoundStorage
@@ -38,6 +40,8 @@ type TeamResponse struct {
 	Team_id int `json:"team_id"`
 	Status_message string `json:"status_message"`
 	Status string `json:"status"`
+	Points flaghandler.Points `json:"points"`
+	//flaghandler.Points
 }
 
 
@@ -62,23 +66,26 @@ func (rh *RoundHandler) GetIpByTeam(team_id int) string {
 func (rh *RoundHandler) TestTeam(team_id int,round int,ch chan TeamResponse) {
 	defer rh.Wg.Done()
 	ip := rh.GetIpByTeam(team_id)
+
 	fmt.Println(ip)
 	if ip == "" {
-		ch <- TeamResponse{team_id,"Team not found","Down"}
+		ch <- TeamResponse{team_id,"Team not found","Down",flaghandler.Points{}}
 		rh.St.SetStatus(team_id,round,"Down")
 		return
 	}
-	cmd := exec.Command(rh.CheckerName,"-t",strconv.Itoa(team_id),"-r",strconv.Itoa(round),"--ip",ip,"-tl","3")
+	cmd := exec.Command(rh.CheckerName,"-t",strconv.Itoa(team_id),"-r",strconv.Itoa(round),"--ip",ip,"-tl","7")
 	stdout, err := cmd.Output()
+	pts,_ := rh.Points.GetPoints(strconv.Itoa(team_id))
 	if err != nil {
 		rh.St.SetStatus(team_id,round,"Down")
-		ch <- TeamResponse{team_id,"Checker failed","Down"}
+		ch <- TeamResponse{team_id,"Checker failed","Down",*pts}
 		return
 	}
 	tr, err := LoadTeamResponse(string(stdout))
+	tr.Points = *pts
 	if err != nil  {
 		rh.St.SetStatus(team_id,round,"Down")
-		ch <- TeamResponse{team_id,"Cant load response","Down"}
+		ch <- TeamResponse{team_id,"Cant load response","Down",*pts}
 		return
 	}
 	rh.St.SetStatus(team_id,round,tr.Status)

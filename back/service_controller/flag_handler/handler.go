@@ -13,6 +13,8 @@ import (
 	//"syscall"
 	//"log"
 	"github.com/jnovikov/hackforces/back/libs/flagresponse"
+	//"../../libs/flagresponse"
+	//"github.com/jnovikov/hackforces/back/libs/flagresponse"
 	"github.com/jnovikov/hackforces/back/libs/storage"
 	"strconv"
 	"math"
@@ -90,14 +92,18 @@ type FlagHandler struct {
 	//pool *redigo.Pool
 }
 
-func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int{
-		ap := math.Max(1.0,float64(attacker_points + 1))
-        vp := math.Max(1.0,float64(victim_points + 1))
-        logattacker := math.Log2(ap) + 1
+func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int {
+	ap := math.Max(1.0,float64(attacker_points + 1))
+	vp := math.Max(1.0,float64(victim_points + 1))
+	if ap > vp {
+		return int(math.Exp(math.Log(15.0) * (15.0 - vp) / (15.0 - ap)))
+	}
+	logattacker := math.Log2(ap) + 1
         logvictim := math.Log2(vp) + 1
         delta := logvictim / logattacker
         delta_points := int(delta * 15)
-		return delta_points
+	return delta_points
+
 }
 
 

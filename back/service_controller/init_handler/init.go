@@ -11,6 +11,7 @@ import (
 type InitHandler struct {
 	Ps *flaghandler.PointsStorage
 	TeamStorage storage.Storage
+
 }
 
 
@@ -22,6 +23,7 @@ func (ih *InitHandler) HandleRequest(data string) string {
 	if err != nil {
 		return "BAD"
 	}
+	ih.TeamStorage.Set("team_num",strconv.Itoa(len(teams.Teams)))
 	fmt.Println(teams)
 	for _,v := range teams.Teams {
 		fmt.Print(v)

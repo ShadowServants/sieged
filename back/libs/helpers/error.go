@@ -42,6 +42,12 @@ func Abs(x int) int {
 func FromBytesToString(buf []byte) string {
 	n := bytes.IndexByte(buf, 0)
 	e := bytes.IndexByte(buf,10)
+	if e >= len(buf) {
+		return string(buf)
+	}
+	if n == -1 {
+		return ""
+	}
 	if (n - e == 1){
 		return string(buf[:e])
 	}
