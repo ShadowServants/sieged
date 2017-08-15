@@ -7,13 +7,22 @@ import (
 	"github.com/jnovikov/hackforces/back/flag_router"
 )
 
-type FlagRouter struct {
+type HTTPFlagRouter struct {
 	Fr *flag_router.FlagRouter
 	Port string
 }
 
+func (fr *HTTPFlagRouter) SetPort(port string) *HTTPFlagRouter {
+	fr.Port = port
+	return fr
+}
 
-func (fr *FlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
+func (fr *HTTPFlagRouter) SetRouter(router *flag_router.FlagRouter) *HTTPFlagRouter {
+	fr.Fr = router
+	return fr
+}
+
+func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
 	flag := r.FormValue("flag")
 	if flag == "" {
 		fmt.Fprint(w,"Field flag is required")
@@ -26,7 +35,7 @@ func (fr *FlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (fh *FlagRouter) StartPolling() {
+func (fh *HTTPFlagRouter) StartPolling() {
 	http.HandleFunc("/",fh.handleRequest)
 	http.ListenAndServe("0.0.0.0:"+fh.Port,nil)
 }
@@ -34,13 +43,11 @@ func (fh *FlagRouter) StartPolling() {
 func main() {
 	Rp := new(storage.RadixPool)
 	Rp.Build("127.0.0.1","6379",20)
-	fr := new(FlagRouter)
-	fr.Fr = flag_router.NewFlagRouter(7)
-	fr.Fr.VisualisationEnabled = true
-	fr.Fr.VisualisationUrl = "http://127.0.0.1:3000/broadcast"
-	fr.Fr.IpStorage = &storage.HsetRadixStorage{Rp,"player_ip_to_team"}
-	fr.Fr.RegisterHandler("T","127.0.0.1:8012")
-	fr.Fr.RegisterHandler("C","127.0.0.1:7012")
-	fr.Port = "7331"
-	fr.StartPolling()
+	FlagRouter := flag_router.NewFlagRouter(7)
+	FlagRouter.SetVisualisation("http://127.0.0.1:3000/broadcast")
+	FlagRouter.IpStorage = &storage.HsetRadixStorage{Rp,"player_ip_to_team"}
+	FlagRouter.RegisterHandler("T","127.0.0.1:8012")
+	FlagRouter.RegisterHandler("C","127.0.0.1:7012")
+	HttpRouter := new(HTTPFlagRouter).SetPort("7331").SetRouter(FlagRouter)
+	HttpRouter.StartPolling()
 }

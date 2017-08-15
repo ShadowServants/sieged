@@ -6,6 +6,25 @@ import (
 	"github.com/jnovikov/hackforces/back/libs/helpers"
 )
 
+
+
+type RadixFactory struct {
+	Pool *RadixPool
+}
+
+func (rf *RadixFactory) GetSimpleStorage() *SimpleRadixStorage {
+	return &SimpleRadixStorage{rf.Pool}
+}
+
+func (rf *RadixFactory) GetHsetStorage(setname string) *HsetRadixStorage {
+	return &HsetRadixStorage{rf.Pool,setname}
+}
+
+
+func (rf *RadixFactory) GetKeySet() *RadixKeySet {
+	return &RadixKeySet{rf.Pool}
+}
+
 type RadixPool struct {
 	pool *pool.Pool
 }
@@ -18,7 +37,6 @@ func (rp *RadixPool) Build (host string, port string,size int) {
 
 	rp.pool = p
 }
-
 
 type SimpleRadixStorage struct {
 	RadixP *RadixPool

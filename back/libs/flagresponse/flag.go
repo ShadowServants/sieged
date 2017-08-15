@@ -15,6 +15,41 @@ type HandlerResponse struct {
 }
 
 
+func (hr *HandlerResponse) SetType(type_str string) *HandlerResponse {
+	hr.Type = type_str
+	return hr
+}
+
+func (hr *HandlerResponse) SetInitiator(initiator int) *HandlerResponse {
+	hr.Initiator = initiator
+	return hr
+}
+
+func (hr *HandlerResponse) SetDelta(delta int) *HandlerResponse {
+	hr.Delta = delta
+	return hr
+}
+
+func (hr *HandlerResponse) SetReason(reason string) *HandlerResponse {
+	hr.Reason = reason
+	return hr
+}
+
+func (hr *HandlerResponse) SetSuccessful(such bool) *HandlerResponse {
+	hr.Successful = such
+	return hr
+}
+
+func (hr *HandlerResponse) SetTarget(target int) *HandlerResponse {
+	hr.Target = target
+	return hr
+}
+
+func NewStealResponse() *HandlerResponse {
+	hr := new(HandlerResponse)
+	hr.Type = "steal"
+	return hr
+}
 func DumpHandlerResponse(p *HandlerResponse) (string, error) {
 	byt, err := json.Marshal(p)
 	if err != nil {

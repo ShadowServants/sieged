@@ -27,6 +27,12 @@ type FlagRouter struct {
 	pool map[string]*tcp_pool.TcpConnectionPool
 }
 
+func (fr *FlagRouter) SetVisualisation(url string) *FlagRouter {
+	fr.VisualisationUrl = url
+	fr.VisualisationEnabled = true
+	return fr
+}
+
 func NewFlagRouter(team_num int) *FlagRouter{
 	fr := new(FlagRouter)
 	fr.team_num = team_num
@@ -38,6 +44,7 @@ func NewFlagRouter(team_num int) *FlagRouter{
 		"too_old":"This flag is too old",
 		"not_ok":"Your service status is not good",
 	}
+	fr.VisualisationEnabled = false
 	fr.serviceMap = make(map[string]string)
 	fr.pool = make(map[string]*tcp_pool.TcpConnectionPool)
 	return fr
@@ -123,9 +130,8 @@ func (fh *FlagRouter) SendToVis(data string) {
 func (fr *FlagRouter) HandleRequest(flag string,ip string) string {
 	from := fr.GetTeamIdByIp(ip)
 	if from == -1 {
-		return "Sorry, but we cant find your team"
+		return "Sorry, but we can`t find your team"
 	}
-	fmt.Println("from")
 	first_char := flag[0]
 	handler, err := fr.getHandler(string(first_char))
 	if err != nil {

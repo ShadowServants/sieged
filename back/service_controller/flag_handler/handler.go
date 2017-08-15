@@ -92,6 +92,45 @@ type FlagHandler struct {
 	//pool *redigo.Pool
 }
 
+func NewFlagHandler() *FlagHandler {
+	f := new(FlagHandler)
+	f.Teams = make(map[int]*TeamData)
+
+	f.RoundCached = false
+	f.RoundDelta = 5
+	return f
+}
+
+func (fh *FlagHandler) SetRoundStorage(st storage.Storage) *FlagHandler {
+
+	fh.RoundSt = &RoundStorage{st}
+	return fh
+}
+
+func (fh *FlagHandler) SetPointStorage(st storage.Storage) *FlagHandler {
+	fh.Points = &PointsStorage{st}
+	return fh
+}
+
+func (fh *FlagHandler) SetFlagStorage(st storage.Storage) *FlagHandler {
+	fh.Flags = flagstorage.NewFlagStorage(st)
+	return fh
+}
+
+func (fh *FlagHandler) SetStatusStorage(st storage.Storage) *FlagHandler {
+	fh.StatusStorage = statusstorage.NewStatusStorage(st)
+	return fh
+}
+
+func (fh *FlagHandler) SetTeamFlagsSet(ks storage.KeySet) *FlagHandler {
+	fh.TeamFlagsSet = ks
+	return fh
+}
+
+func (fh *FlagHandler) CacheRound(callback func ()) {
+	fh.RoundCached = true
+}
+
 func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int {
 	ap := math.Max(1.0,float64(attacker_points + 1))
 	vp := math.Max(1.0,float64(victim_points + 1))
@@ -142,19 +181,6 @@ func (fh *FlagHandler) StoreData(teams ...TeamData) {
 	}
 }
 
-func (fh *FlagHandler) Build() {
-	fh.Teams = make(map[int]*TeamData)
-	//for i:=1; i<=num;i++{
-	//	tp, err := fh.Points.GetPoints(strconv.Itoa(i))
-	//	if err != nil {
-	//		tp = &Points{0,0,basepoints}
-	//	}
-	//	td := NewTeamData(i,*tp)
-	//	fh.Teams[i] =  td//points
-	//	fh.StoreData(*td)
-	//}
-}
-
 func (fh *FlagHandler)  GetTeamDataById(id int) (*TeamData,error){
 	if data,ok := fh.Teams[id]; ok {
 		return data,nil
@@ -165,6 +191,11 @@ func (fh *FlagHandler)  GetTeamDataById(id int) (*TeamData,error){
 		return td,nil
 	}
 	return nil,errors.New("Cant get team")
+}
+
+func (fr *FlagHandler) SetRoundCached(cached bool) *FlagHandler {
+	fr.RoundCached = cached
+	return fr
 }
 
 func (fh *FlagHandler) GetCurrentRound() int {
@@ -214,46 +245,18 @@ func (fh *FlagHandler) HandleRequest(s string) string{
 	if err != nil {
 		return "Bad request"
 	}
-	response := flagresponse.HandlerResponse{}
-	response.Type = "steal"
-	response.Initiator = team_request.Team
+	response := flagresponse.NewStealResponse().SetInitiator(team_request.Team)
 	if ok,response_text := fh.ValidateFlag(team_request); !ok {
-		response.Reason = response_text
-		response.Successful = false
-		response.Target = -1
-		resp, _ := flagresponse.DumpHandlerResponse(&response)
+		response.SetReason(response_text).SetSuccessful(false).SetTarget(-1)
+		resp, _ := flagresponse.DumpHandlerResponse(response)
 		return resp
 	}
-	response.Successful = true
 	victim := fh.CheckFlag(team_request.Flag).Team
-	response.Target = victim
 	delta := fh.calc(team_request.Team,victim)
 	fh.SetCaptured(team_request)
-	response.Delta = delta
+	response.SetSuccessful(true).SetTarget(victim).SetDelta(delta)
 
-	resp, _ := flagresponse.DumpHandlerResponse(&response)
+	resp, _ := flagresponse.DumpHandlerResponse(response)
 	return resp
 
 }
-
-
-//func main()  {
-//	conn , err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-//	helpers.FailOnError(err,"Cant connect to rabbit")
-//	defer conn.Close()
-//	a_handler:= new(rpc.AckHandler)
-//	a_handler.Init()
-//
-//	mq := new(rpc.RabbitMqRpc)
-//	defer mq.Close()
-//	mq.Connection = conn
-//	mq.Build("flags_rpc",1)
-//	mq.Handler = a_handler
-//	go mq.Handle()
-//
-//	ch := make(chan os.Signal)
-//	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
-//	log.Println(<-ch)
-//
-//	mq.Close()
-//}

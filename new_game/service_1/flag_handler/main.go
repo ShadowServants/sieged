@@ -30,8 +30,8 @@ func main() {
 	roundst := &flaghandler.RoundStorage{&rs}
 	fl.RoundSt = roundst
 	fl.Flags = flags
-	fl.RoundDelta = 5
-	fl.RoundCached = false
+	//fl.RoundDelta = 5
+	//fl.RoundCached = false
 	ss := storage.HsetRadixStorage{Rp,"statuses"}
 	//ss := storage.HsetRedisStorage{storage.BaseRedisStorage{executor},"statuses"}
 	statuses := statusstorage.NewStatusStorage(&ss)
