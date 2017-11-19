@@ -236,6 +236,7 @@ func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool,string) {
 
 }
 
+
 func (fh *FlagHandler) SetCaptured(tr *TeamRequest) {
 	fh.TeamFlagsSet.Add(strconv.Itoa(tr.Team),tr.Flag)
 }

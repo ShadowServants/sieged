@@ -19,7 +19,6 @@ func main() {
 	flagHandlerFactory.SetTeamFlagsSet(radixFactory.GetKeySet())
 	flagHandlerFactory.SetRoundStorage(radixFactory.GetHsetStorage("rounds"))
 	flagHandlerFactory.SetStatusStorage(radixFactory.GetHsetStorage("statuses"))
-
 	flagHandler := flagHandlerFactory.GetFlagHandler()
 	rpc_tcp := rpc.TcpRpc{"7878", "127.0.0.1", flagHandler}
 	rpc_tcp.Handle()

@@ -15,8 +15,9 @@ type SimpleStorage struct {
 	data map[string] string
 }
 
-func (st *SimpleStorage) Init() {
+func (st *SimpleStorage) Init() *SimpleStorage{
 	st.data = make(map[string]string)
+	return st
 }
 
 func (st *SimpleStorage) Get(key string) (string,error) {
@@ -31,3 +32,7 @@ func (st *SimpleStorage) Set(key string,value string)  {
 	st.data[key] = value
 }
 
+
+func NewSimpleStorage() *SimpleStorage{
+	return new(SimpleStorage).Init()
+}

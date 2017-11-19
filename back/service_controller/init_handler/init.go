@@ -17,14 +17,12 @@ type InitHandler struct {
 
 
 func (ih *InitHandler) HandleRequest(data string) string {
-	fmt.Println(data)
 	ih.TeamStorage.Set("teams_id",data)
 	teams,err := team_list.LoadsTeamList(data)
 	if err != nil {
 		return "BAD"
 	}
 	ih.TeamStorage.Set("team_num",strconv.Itoa(len(teams.Teams)))
-	fmt.Println(teams)
 	for _,v := range teams.Teams {
 		fmt.Print(v)
 		ih.Ps.SetPoints(strconv.Itoa(v),&flaghandler.Points{0,0,1700})

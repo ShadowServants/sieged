@@ -9,12 +9,19 @@ type KeySet interface {
 	Check(key string, value string) bool
 }
 
+func NewSimpleKeySet() *SimpleKeySet {
+	ks := new(SimpleKeySet)
+	ks.Build()
+	return ks
+}
+
 type SimpleKeySet struct {
 	m map[string]mapset.Set
 }
 
 func (ks *SimpleKeySet) Build() {
 	ks.m = make(map[string]mapset.Set)
+
 }
 
 func (ks *SimpleKeySet) Add(key string, value string )  {
