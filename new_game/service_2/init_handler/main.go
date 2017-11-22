@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/jnovikov/hackforces/back/service_controller/init_handler"
-	"github.com/jnovikov/hackforces/back/service_controller/flag_handler"
-	"github.com/jnovikov/hackforces/back/libs/storage"
-	"github.com/jnovikov/hackforces/back/libs/rpc"
-	"github.com/jnovikov/hackforces/back/service_controller/round_handler"
+	"github.com/jnovikov/hackforces/service_controller/init_handler"
+	"github.com/jnovikov/hackforces/service_controller/flag_handler"
+	"github.com/jnovikov/hackforces/libs/storage"
+	"github.com/jnovikov/hackforces/libs/rpc"
+	"github.com/jnovikov/hackforces/service_controller/round_handler"
 	"sync"
-	"github.com/jnovikov/hackforces/back/libs/statusstorage"
+	"github.com/jnovikov/hackforces/libs/statusstorage"
 )
 
 //BAse redis

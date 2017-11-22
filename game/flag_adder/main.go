@@ -19,7 +19,7 @@ var (
 
 
 const letterBytes = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const serviceChar = "T"
+const serviceChar = "R"
 
 var Stor storage.HsetRadixStorage
 
@@ -59,11 +59,10 @@ func indexHandler(w http.ResponseWriter,r *http.Request){
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	Rp := new(storage.RadixPool)
-	Rp.Build("127.0.0.1","6378",7)
+	Rp.Build("127.0.0.1","6379",7)
 	Stor = storage.HsetRadixStorage{Rp,"flags"}
 	http.HandleFunc("/",indexHandler)
 	http.ListenAndServe("127.0.0.1"+":"+PORT,nil)
 }
-
 
 

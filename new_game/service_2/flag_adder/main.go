@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"time"
 	"strconv"
-	"github.com/jnovikov/hackforces/back/libs/storage"
-	"github.com/jnovikov/hackforces/back/libs/flagdata"
+	"github.com/jnovikov/hackforces/libs/storage"
+	"github.com/jnovikov/hackforces/libs/flagdata"
 )
 var (
     PORT = "7011"
