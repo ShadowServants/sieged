@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/jnovikov/hackforces/service_controller/flag_handler"
 	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/libs/flagstorage"
+	"github.com/jnovikov/hackforces/service_controller/flag_handler/flagstorage"
 	"github.com/jnovikov/hackforces/libs/statusstorage"
 	"github.com/jnovikov/hackforces/libs/rpc"
 )

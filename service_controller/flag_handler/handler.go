@@ -28,8 +28,8 @@ import (
 	//"github.com/jnovikov/hackforces/libs/flagdata"
 	//"github.com/jnovikov/hackforces/libs/statusstorage"
 	"../../libs/statusstorage"
-	"../../libs/flagstorage"
 	"../../libs/flagdata"
+	"./flagstorage"
 )
 
 

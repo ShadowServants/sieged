@@ -3,7 +3,7 @@ package storage
 import (
 	"github.com/garyburd/redigo/redis"
 	"errors"
-	"github.com/jnovikov/hackforces/libsers"
+	"../../libs/helpers"
 	"fmt"
 	"sync"
 )
