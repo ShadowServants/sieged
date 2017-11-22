@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
 	"net/http"
 	"fmt"
 	"strings"
 	"strconv"
 	"net"
 	"gopkg.in/fatih/pool.v2"
-	"github.com/jnovikov/hackforces/libs/helpers"
-	"github.com/jnovikov/hackforces/service_controller/flag_handler"
 	"bufio"
-	"github.com/jnovikov/hackforces/libs/flagresponse"
 	"bytes"
+	"hackforces/libs/helpers"
+	"hackforces/libs/storage"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/flagresponse"
 )
 
 var reason_map = map[string]string {

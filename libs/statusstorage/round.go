@@ -1,8 +1,8 @@
 package statusstorage
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
 	"fmt"
+	"hackforces/libs/storage"
 )
 
 type StatusStorage struct {

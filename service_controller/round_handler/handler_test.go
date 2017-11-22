@@ -2,9 +2,9 @@ package round_handler
 
 import (
 	"testing"
-	"github.com/jnovikov/hackforces/service_controllerndler"
 	"encoding/json"
 	"fmt"
+	"hackforces/service_controller/flag_handler"
 )
 
 func TestRoundHandler_TestTeam(t *testing.T) {

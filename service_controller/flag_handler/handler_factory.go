@@ -1,10 +1,9 @@
 package flaghandler
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
-	"hackforces/"
-	"github.com/jnovikov/hackforces/libs/statusstorage"
-	"github.com/jnovikov/hackforces/service_controller/flag_handler/flagstorage"
+	"hackforces/libs/storage"
+	"hackforces/service_controller/flag_handler/flagstorage"
+	"hackforces/libs/statusstorage"
 )
 
 type FlagHandlerFactory struct {

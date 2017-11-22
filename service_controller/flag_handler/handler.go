@@ -1,35 +1,17 @@
 package flaghandler
 
-//import "github.com/johnnovikov/hackforces/back/service_controller/libs"
 import (
-	//"github.com/streadway/amqp"
-	//"github.com/jnovikov/hackforces/back/libs/rpc"
-	//redigo "github.com/garyburd/redigo/redis"
-	//"github.com/streadway/amqp"
-	"../../libs/helpers"
-	//"github.com/jnovikov/hackforces/libs/helpers"
+	"hackforces/libs/flagresponse"
+	"hackforces/libs/statusstorage"
+	"hackforces/libs/helpers"
 	"sync"
-	//"os"
-	//"os/signal"
-	//"syscall"
-	//"log"
-	"../../libs/flagresponse"
-	//"github.com/jnovikov/hackforces/libs/flagresponse"
-	//"../../libs/flagresponse"
-	//"github.com/jnovikov/hackforces/back/libs/flagresponse"
-	"../../libs/storage"
-
-	//"github.com/jnovikov/hackforces/libs/storage"
 	"strconv"
 	"math"
 	"encoding/json"
 	"errors"
-	//"github.com/jnovikov/hackforces/libs/flagstorage"
-	//"github.com/jnovikov/hackforces/libs/flagdata"
-	//"github.com/jnovikov/hackforces/libs/statusstorage"
-	"../../libs/statusstorage"
-	"../../libs/flagdata"
-	"./flagstorage"
+	"hackforces/libs/storage"
+	"hackforces/libs/flagdata"
+	"hackforces/service_controller/flag_handler/flagstorage"
 )
 
 

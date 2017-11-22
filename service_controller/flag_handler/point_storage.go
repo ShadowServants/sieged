@@ -1,9 +1,9 @@
 package flaghandler
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
 	"encoding/json"
 	"errors"
+	"hackforces/libs/storage"
 )
 
 func LoadsPoints(s string) (*Points, error) {

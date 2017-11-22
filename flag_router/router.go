@@ -1,18 +1,18 @@
 package flag_router
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/libs/tcp_pool"
 	"strings"
 	"errors"
 	"fmt"
 	"strconv"
 	"net"
-	"github.com/jnovikov/hackforces/service_controller/flag_handler"
 	"bufio"
-	"github.com/jnovikov/hackforces/libs/flagresponse"
 	"net/http"
 	"bytes"
+	"hackforces/libs/storage"
+	"hackforces/libs/tcp_pool"
+	"hackforces/libs/flagresponse"
+	"hackforces/service_controller/flag_handler"
 )
 
 

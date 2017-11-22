@@ -3,7 +3,7 @@ package storage
 import (
 	"github.com/mediocregopher/radix.v2/pool"
 	"fmt"
-	"github.com/jnovikov/hackforces/libs/helpers"
+	"hackforces/libs/helpers"
 )
 
 

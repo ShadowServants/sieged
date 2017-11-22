@@ -3,7 +3,7 @@ package flaghandler
 import (
 	"testing"
 	//"fmt"
-	"github.com/jnovikov/hackforces/libs/storage"
+	"hackforces/libs/storage"
 )
 
 func TestLoadsPoints(t *testing.T) {

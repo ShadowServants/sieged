@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/jnovikov/hackforces/service_controller/flag_handler"
-	"github.com/jnovikov/hackforces/libs/storage"
 	//"github.com/jnovikov/hackforces/back/libs/flagstorage"
 	//"github.com/jnovikov/hackforces/back/libs/statusstorage"
-	"github.com/jnovikov/hackforces/libs/rpc"
+	"hackforces/libs/storage"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/rpc"
 )
 
 func main() {

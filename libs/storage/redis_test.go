@@ -2,10 +2,10 @@ package storage
 
 import (
 	"github.com/garyburd/redigo/redis"
-	"github.com/jnovikov/hackforces/libs/helpers"
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
 	"sync"
+	"hackforces/libs/helpers"
 )
 
 func GetSimpleRedisExecutor() *RedisPoolExecutor{

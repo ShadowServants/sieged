@@ -2,11 +2,11 @@ package flaghandler
 
 import (
 	"testing"
-	"../../libs/storage"
 	//"fmt"
 	. "github.com/smartystreets/goconvey/convey"
-	"../../libs/flagdata"
 	"fmt"
+	"hackforces/libs/storage"
+	"hackforces/libs/flagdata"
 )
 
 

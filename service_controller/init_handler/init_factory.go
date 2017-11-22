@@ -1,8 +1,8 @@
 package init_handler
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/ansible/service_controllerler/flag_handler"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/storage"
 )
 
 type InitHandlerFactory struct{

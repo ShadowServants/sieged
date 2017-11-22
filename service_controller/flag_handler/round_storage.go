@@ -1,8 +1,8 @@
 package flaghandler
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
 	"strconv"
+	"hackforces/libs/storage"
 )
 
 type RoundStorage struct {

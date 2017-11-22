@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 	"fmt"
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/flag_router"
+	"hackforces/flag_router"
+	"hackforces/libs/storage"
 )
 
 type HTTPFlagRouter struct {

@@ -1,18 +1,16 @@
 package round_handler
 
 import (
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/libs/team_list"
-
 	"strconv"
-	//"github.com/jnovikov/hackforces/back/service_controller/flag_handler"
-	"github.com/jnovikov/hackforces/libs/statusstorage"
-	"github.com/jnovikov/hackforces/ansible/service_controllerler/flag_handler"
 	"sync"
 	"os/exec"
 	"errors"
 	"encoding/json"
 	"fmt"
+	"hackforces/libs/storage"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/statusstorage"
+	"hackforces/libs/team_list"
 )
 
 type RoundHandler struct {

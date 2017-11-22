@@ -4,7 +4,7 @@ import (
 	"net"
 	"fmt"
 	"gopkg.in/fatih/pool.v2"
-	"github.com/jnovikov/hackforces/libs/helpers"
+	"hackforces/libs/helpers"
 )
 
 type TcpConnectionPool struct {

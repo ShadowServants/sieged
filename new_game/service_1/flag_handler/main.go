@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/jnovikov/hackforces/service_controller/flag_handler"
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/service_controller/flag_handler/flagstorage"
-	"github.com/jnovikov/hackforces/libs/statusstorage"
-	"github.com/jnovikov/hackforces/libs/rpc"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/storage"
+	"hackforces/service_controller/flag_handler/flagstorage"
+	"hackforces/libs/statusstorage"
+	"hackforces/libs/rpc"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 	//ss := storage.HsetRedisStorage{storage.BaseRedisStorage{executor},"statuses"}
 	statuses := statusstorage.NewStatusStorage(&ss)
 	fl.StatusStorage = statuses
-	fl.Build()
+	//fl.Build()
 	rpc_tcp := rpc.TcpRpc{"8012","127.0.0.1",&fl}
 	rpc_tcp.Handle()
 

@@ -4,7 +4,7 @@ import (
 	"net"
 	"fmt"
 	"os"
-	"github.com/jnovikov/hackforces/libsers"
+	"hackforces/libs/helpers"
 )
 
 type TcpRpc struct {

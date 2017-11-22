@@ -1,11 +1,11 @@
 package init_handler
 
 import (
-	"github.com/jnovikov/hackforces/ansible/service_controllerler/flag_handler"
-	"github.com/jnovikov/hackforces/libs/storage"
-	"github.com/jnovikov/hackforces/libs/team_list"
 	"strconv"
 	"fmt"
+	"hackforces/service_controller/flag_handler"
+	"hackforces/libs/storage"
+	"hackforces/libs/team_list"
 )
 
 type InitHandler struct {
