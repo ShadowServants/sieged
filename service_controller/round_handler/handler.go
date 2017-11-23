@@ -22,6 +22,7 @@ type RoundHandler struct {
 	TeamIds []int
 	Rounds *flaghandler.RoundStorage
 	CheckerName string
+	DefaultPoints int
 
 }
 
@@ -147,4 +148,32 @@ func (rh *RoundHandler) HandleRequest(a string) string {
 	return rh.CheckTeams(round_int)
 
 
+}
+
+func (rh *RoundHandler) LoadsTeamsIp(teams []team_list.TeamIP) {
+	teams_id := make([]int,0)
+	for _, team := range teams {
+		team_id_str := strconv.Itoa(team.Id)
+		rh.IpStorage.Set(team_id_str,team.Server)
+		pts, _ := rh.Points.GetPoints(team_id_str)
+		if pts == nil {
+			rh.Points.SetPoints(team_id_str,&flaghandler.Points{0,0,rh.DefaultPoints})
+		}
+		teams_id = append(teams_id,team.Id)
+	}
+	rh.TeamIds = teams_id
+	tl := &team_list.TeamList{Teams: teams_id}
+
+	tl_string, _ := team_list.DumpTeamList(tl)
+	rh.TeamStorage.Set("teams_id",tl_string)
+
+
+}
+
+func NewRoundHandler() *RoundHandler {
+	rh := new(RoundHandler)
+	rh.Wg = sync.WaitGroup{}
+	rh.TeamIds = make([]int,0)
+	rh.DefaultPoints = 1700
+	return rh
 }

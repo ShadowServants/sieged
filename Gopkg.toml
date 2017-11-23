@@ -48,3 +48,7 @@
 [[constraint]]
   branch = "v2.0.0"
   name = "gopkg.in/fatih/pool.v2"
+
+[[constraint]]
+  name = "github.com/spf13/viper"
+  version = "1.0.0"

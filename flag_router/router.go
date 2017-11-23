@@ -9,7 +9,7 @@ import (
 	"bufio"
 	"net/http"
 	"bytes"
-	"hackforces/libs/storage"
+	//"hackforces/libs/storage"
 	"hackforces/libs/tcp_pool"
 	"hackforces/libs/flagresponse"
 	"hackforces/service_controller/flag_handler"
@@ -17,7 +17,8 @@ import (
 
 
 type FlagRouter struct {
-	IpStorage storage.Storage
+	//IpStorage storage.Storage
+	IpStorage map[string]string
 	//Storage storage.Storage
 	team_num int
 	serviceMap map[string]string
@@ -33,6 +34,7 @@ func (fr *FlagRouter) SetVisualisation(url string) *FlagRouter {
 	return fr
 }
 
+
 func NewFlagRouter(team_num int) *FlagRouter{
 	fr := new(FlagRouter)
 	fr.team_num = team_num
@@ -47,9 +49,19 @@ func NewFlagRouter(team_num int) *FlagRouter{
 	fr.VisualisationEnabled = false
 	fr.serviceMap = make(map[string]string)
 	fr.pool = make(map[string]*tcp_pool.TcpConnectionPool)
+	fr.IpStorage = make(map[string]string)
 	return fr
 
 }
+
+func (fr *FlagRouter) AddTeam(ip_cidr string,team_id string) {
+		fr.IpStorage[ip_cidr] = team_id
+}
+
+//func (fr *FlagRouter) SetIpStorage(st storage.Storage) *FlagRouter{
+//	fr.IpStorage = st
+//	return fr
+//}
 
 func (fr *FlagRouter) getHandler(key string) (*tcp_pool.TcpConnectionPool,error) {
 	if len(fr.serviceMap) != 0 {
@@ -149,20 +161,30 @@ func (fr *FlagRouter) HandleRequest(flag string,ip string) string {
 }
 
 func (fr *FlagRouter) GetTeamIdByIp(ip_raw string) int {
-    fmt.Println(ip_raw)
     ind := strings.Index(ip_raw,":")
     if ind <= 0{
       ind = 1
     }
     ip := ip_raw[:ind]
-	team_id,err := fr.IpStorage.Get(ip)
-	fmt.Println(ip,team_id)
-	if err != nil {
-		return -1
+
+    ip_bytes := net.ParseIP(ip)
+    fmt.Printf("From %s \n",ip)
+    team_id_int := -1
+    for key, value := range fr.IpStorage {
+    	_, ipv4Net, err := net.ParseCIDR(key)
+    	fmt.Printf("%s \n",ipv4Net.String())
+    	if err != nil {
+    		continue
+		}
+		if ipv4Net.Contains(ip_bytes) {
+			v_int, err := strconv.Atoi(value)
+			if err != nil {
+				continue
+			}
+			team_id_int = v_int
+		}
+
 	}
-	team_id_int,err := strconv.Atoi(team_id)
-	if err != nil {
-		return -1
-	}
+
 	return team_id_int
 }

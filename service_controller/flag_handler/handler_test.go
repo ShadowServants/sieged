@@ -85,6 +85,7 @@ func TestFlagHandler_calc(t *testing.T) {
 }
 
 func TestFlagHandler_Build(t *testing.T) {
+	flag_handler = BuildTestFlagHandler()
 	td,_ := flag_handler.GetTeamDataById(1)
 	Convey("Check that base points are ok",t,func(){
 		So(td.points.Points,ShouldEqual,1700)

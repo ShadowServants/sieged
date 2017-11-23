@@ -166,7 +166,7 @@ func (fh *FlagHandler) CheckFlag(flag string) *flagdata.FlagData {
 
 func (fh *FlagHandler) StoreData(teams ...TeamData) {
 	for _, team := range teams {
-		fh.Points.SetPoints(strconv.Itoa(team.id),&team.points)
+		fh.Points.SetPoints(strconv.Itoa(team.id), &team.points)
 	}
 }
 
@@ -179,7 +179,7 @@ func (fh *FlagHandler)  GetTeamDataById(id int) (*TeamData,error){
 		fh.Teams[id] = td
 		return td,nil
 	}
-	return nil,errors.New("Cant get team")
+	return nil,errors.New("Can't get team")
 }
 
 func (fr *FlagHandler) SetRoundCached(cached bool) *FlagHandler {
@@ -236,7 +236,7 @@ func (fh *FlagHandler) HandleRequest(s string) string{
 		return "Bad request"
 	}
 	response := flagresponse.NewStealResponse().SetInitiator(team_request.Team)
-	if ok,response_text := fh.ValidateFlag(team_request); !ok {
+	if ok, response_text := fh.ValidateFlag(team_request); !ok {
 		response.SetReason(response_text).SetSuccessful(false).SetTarget(-1)
 		resp, _ := flagresponse.DumpHandlerResponse(response)
 		return resp

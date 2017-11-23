@@ -1,53 +1,81 @@
 package main
 
 import (
-	"net/http"
-	"fmt"
 	"hackforces/flag_router"
+	"github.com/spf13/viper"
 	"hackforces/libs/storage"
+	"hackforces/libs/helpers"
+	"hackforces/libs/team_list"
+	"strconv"
+	"fmt"
 )
 
-type HTTPFlagRouter struct {
-	Fr *flag_router.FlagRouter
-	Port string
+type Service struct {
+	FPrefix string
+	HostPort string
 }
 
-func (fr *HTTPFlagRouter) SetPort(port string) *HTTPFlagRouter {
-	fr.Port = port
-	return fr
-}
 
-func (fr *HTTPFlagRouter) SetRouter(router *flag_router.FlagRouter) *HTTPFlagRouter {
-	fr.Fr = router
-	return fr
-}
-
-func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
-	flag := r.FormValue("flag")
-	if flag == "" {
-		fmt.Fprint(w,"Field flag is required")
-		return
-	}
-	ip := r.RemoteAddr
-	response := fr.Fr.HandleRequest(flag,ip)
-	fmt.Println(ip,flag,response)
-	fmt.Fprint(w,response)
-	return
-}
-
-func (fh *HTTPFlagRouter) StartPolling() {
-	http.HandleFunc("/",fh.handleRequest)
-	http.ListenAndServe("0.0.0.0:"+fh.Port,nil)
-}
 
 func main() {
-	Rp := new(storage.RadixPool)
-	Rp.Build("127.0.0.1","6379",20)
-	FlagRouter := flag_router.NewFlagRouter(7)
-	FlagRouter.SetVisualisation("http://127.0.0.1:3000/broadcast")
-	FlagRouter.IpStorage = &storage.HsetRadixStorage{Rp,"player_ip_to_team"}
-	FlagRouter.RegisterHandler("T","127.0.0.1:8012")
-	FlagRouter.RegisterHandler("C","127.0.0.1:7012")
-	HttpRouter := new(HTTPFlagRouter).SetPort("7331").SetRouter(FlagRouter)
-	HttpRouter.StartPolling()
+
+	viper.SetConfigFile("router_config.yaml")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	viper.SetDefault("http_host","0.0.0.0")
+	viper.SetDefault("http_port","8000")
+	viper.SetDefault("team_num",10)
+	viper.SetDefault("redis_host","127.0.0.1")
+	viper.SetDefault("redis_/port","6379")
+	viper.SetDefault("redis_pool_size",20)
+	err := viper.ReadInConfig() // Find and read the config file
+	helpers.FailOnError(err,"Failed to read router_config.yaml")
+
+
+	var services []Service
+    err = viper.UnmarshalKey("services", &services)
+    helpers.FailOnError(err,"Failed to load services")
+
+	radix_pool := new(storage.RadixPool)
+	radix_pool.Build(
+	viper.GetString("redis_host"),
+	viper.GetString("redis_port"),
+	viper.GetInt("redis_pool_size"))
+
+
+	router_handler := flag_router.NewFlagRouter(viper.GetInt("team_num"))
+
+	//router_handler.SetIpStorage(&storage.HsetRadixStorage{radix_pool,"player_ip_to_team"})
+
+	for _, service := range services {
+		print(service.FPrefix)
+		router_handler.RegisterHandler(service.FPrefix,service.HostPort)
+	}
+
+	viper_teams := viper.New()
+	viper_teams.SetConfigFile("teams.yaml")
+	viper_teams.SetConfigType("yaml")
+	viper_teams.AddConfigPath(".")
+
+	var teams []team_list.TeamIP
+	err = viper_teams.ReadInConfig() // Find and read the config file
+	helpers.FailOnError(err,"Failed to read teams.yaml")
+
+	err = viper_teams.UnmarshalKey("teams",&teams)
+	helpers.FailOnError(err,"Cant parse team list")
+	for _, team := range teams {
+		router_handler.AddTeam(team.Network,strconv.Itoa(team.Id))
+	}
+
+	fmt.Print("Ip to team -- ",router_handler.IpStorage)
+	http_port := viper.GetString("tcp_port")
+	http_host := viper.GetString("tcp_host")
+	if viper.IsSet("visualisation_url") {
+		router_handler.SetVisualisation(viper.GetString("visualisation_url"))
+
+	}
+	tcp_router := new(flag_router.TcpRouter).SetHost(http_host).SetPort(http_port).SetRouter(router_handler)
+	tcp_router.StartPolling()
+
+
 }

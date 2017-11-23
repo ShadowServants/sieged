@@ -8,6 +8,12 @@
   version = "v1.7"
 
 [[projects]]
+  name = "github.com/fsnotify/fsnotify"
+  packages = ["."]
+  revision = "629574ca2a5df945712d3079857300b5e4da0236"
+  version = "v1.4.2"
+
+[[projects]]
   name = "github.com/garyburd/redigo"
   packages = ["internal","redis"]
   revision = "47dc60e71eed504e3ef8e77ee3c6fe720f3be57f"
@@ -18,6 +24,12 @@
   name = "github.com/gopherjs/gopherjs"
   packages = ["js"]
   revision = "444abdf920945de5d4a977b572bcc6c674d1e4eb"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/hashicorp/hcl"
+  packages = [".","hcl/ast","hcl/parser","hcl/scanner","hcl/strconv","hcl/token","json/parser","json/scanner","json/token"]
+  revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
 
 [[projects]]
   branch = "refactoring_structure"
@@ -32,10 +44,28 @@
   version = "v4.2.1"
 
 [[projects]]
+  name = "github.com/magiconair/properties"
+  packages = ["."]
+  revision = "be5ece7dd465ab0765a9682137865547526d1dfb"
+  version = "v1.7.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/mediocregopher/radix.v2"
   packages = ["pool","redis"]
   revision = "d234cfb904a91daafa4e1f92599a893b349cc0c2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mitchellh/mapstructure"
+  packages = ["."]
+  revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
+
+[[projects]]
+  name = "github.com/pelletier/go-toml"
+  packages = ["."]
+  revision = "16398bac157da96aa88f98a2df640c7f32af1da2"
+  version = "v1.0.1"
 
 [[projects]]
   name = "github.com/smartystreets/assertions"
@@ -50,10 +80,52 @@
   version = "1.6.3"
 
 [[projects]]
+  name = "github.com/spf13/afero"
+  packages = [".","mem"]
+  revision = "8d919cbe7e2627e417f3e45c3c0e489a5b7e2536"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/spf13/cast"
+  packages = ["."]
+  revision = "acbeb36b902d72a7a4c18e8f3241075e7ab763e4"
+  version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/spf13/jwalterweatherman"
+  packages = ["."]
+  revision = "12bd96e66386c1960ab0f74ced1362f66f552f7b"
+
+[[projects]]
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/spf13/viper"
+  packages = ["."]
+  revision = "25b30aa063fc18e48662b86996252eabdcf2f0c7"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/streadway/amqp"
   packages = ["."]
   revision = "ff791c2d22d3f1588b4e2cc71a9fba5e1da90654"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "82aafbf43bf885069dc71b7e7c2f9d7a614d47da"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/text"
+  packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
+  revision = "88f656faf3f37f690df1a32515b479415e1a6769"
 
 [[projects]]
   branch = "v2.0.0"
@@ -61,9 +133,15 @@
   packages = ["."]
   revision = "010e0b745d12eaf8426c95f9c3924d81dd0b668f"
 
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "287cf08546ab5e7e37d55a84f7ed3fd1db036de5"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "079eab215d98bcc0991c0ee4b7108d6953b8c5f0f2f23e23e74d81cb21e3d4fd"
+  inputs-digest = "1cf9580c48a122221b760133325ab01a3375a5c5e6ced1f0c992d3d10026d9f0"
   solver-name = "gps-cdcl"
   solver-version = 1
