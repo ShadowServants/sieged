@@ -35,6 +35,7 @@ func main() {
 	flagHandlerFactory.SetTeamFlagsSet(radixFactory.GetKeySet())
 	flagHandlerFactory.SetRoundStorage(radixFactory.GetHsetStorage("rounds"))
 	flagHandlerFactory.SetStatusStorage(radixFactory.GetHsetStorage("statuses"))
+	flagHandlerFactory.SetTeamNum(viper.GetInt("team_num"))
 	flagHandler := flagHandlerFactory.GetFlagHandler()
 	tcp_port := viper.GetString("tcp_port")
 	tcp_host := viper.GetString("tcp_host")

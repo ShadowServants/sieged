@@ -141,6 +141,9 @@ func (fh *FlagRouter) SendToVis(data string) {
 }
 
 func (fr *FlagRouter) HandleRequest(flag string,ip string) string {
+	if len(flag) <= 0 {
+		return "Bad"
+	}
 	from := fr.GetTeamIdByIp(ip)
 	if from == -1 {
 		return "Sorry, but we can`t find your team"

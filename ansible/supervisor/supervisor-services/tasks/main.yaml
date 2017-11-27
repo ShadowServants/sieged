@@ -1,0 +1,41 @@
+---
+# tasks file for supervisor-services
+
+- name: Debug roght variable
+  debug:
+    msg: "{{ inventory_hostname }}"
+
+- name: Create service directory for supervisor
+  file:
+    path: "{{ supervisor_path }}/{{ service_directory }}"
+    state: directory
+    mode: 0755
+
+- name: Create directories for redis files
+  file:
+    path: "{{ supervisor_path }}/redis_store"
+    state: directory
+    mode: 0755
+
+
+- name: Create supervisor files for service
+  template:
+    src: "templates/service_controller.conf"
+    dest: "{{ supervisor_path }}/{{ service_directory }}/service_controller.conf"
+    mode: 0755
+
+- name: Copy binaries for service
+  copy:
+    src: "{{ base_path }}/binaries/{{ item }}"
+    dest: "{{ supervisor_path }}/{{ service_directory }}/{{ item }}"
+    mode: 0755
+    remote_src: yes
+  with_items:
+    - "flag_handler"
+    - "flag_adder"
+    - "round_handler"
+
+- name: Copy redis configuration
+  template:
+    src: "templates/redis.conf"
+    dest: "{{ supervisor_path }}/{{ service_directory }}/redis.cnf"

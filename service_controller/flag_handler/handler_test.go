@@ -23,7 +23,7 @@ func BuildTestFlagHandler() *FlagHandler{
 	f_handler.RoundDelta = 3
 	f_handler.CurrentRound = 1
 	f_handler.RoundCached  = false
-
+	f_handler.TeamNum = 3
 	f_handler.Points.SetPoints("1",&Points{0,0,1700})
 	f_handler.Points.SetPoints("2",&Points{0,0,1700})
 	f_handler.Points.SetPoints("3",&Points{0,0,1700})
@@ -53,19 +53,19 @@ func TestFlagHandler_calc(t *testing.T) {
 		victim_data,_ := flag_handler.GetTeamDataById(victim)
 
 
-		So(res,ShouldAlmostEqual,15)
+		So(res,ShouldAlmostEqual,3)
 		So(attacker_data.points.Plus,ShouldEqual,1)
 		So(attacker_data.points.Minus,ShouldEqual,0)
 		So(victim_data.points.Plus,ShouldEqual,0)
 		So(victim_data.points.Minus,ShouldEqual,1)
-		So(attacker_data.points.Points,ShouldAlmostEqual,1715)
-		So(victim_data.points.Points,ShouldAlmostEqual,1685)
+		So(attacker_data.points.Points,ShouldAlmostEqual,1703)
+		So(victim_data.points.Points,ShouldAlmostEqual,1697)
 	})
 	Convey("Check team 2 attacks team 1",t,func(){
 		attacker := 2
 		victim := 1
 		res := flag_handler.calc(attacker,victim)
-		So(res,ShouldAlmostEqual,15)
+		So(res,ShouldAlmostEqual,3)
 		So(flag_handler.Teams[attacker].points.Plus,ShouldEqual,1)
 		So(flag_handler.Teams[attacker].points.Minus,ShouldEqual,1)
 		So(flag_handler.Teams[victim].points.Plus,ShouldEqual,1)

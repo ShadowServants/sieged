@@ -42,6 +42,16 @@ func (ff *FlagHandlerFactory) SetTeamFlagsSet(ks storage.KeySet) *FlagHandlerFac
 	return ff
 }
 
+func (ff *FlagHandlerFactory) SetTeamNum(team_num int) *FlagHandlerFactory {
+	ff.flaghandler.TeamNum = team_num
+	return ff
+}
+
+func (ff *FlagHandlerFactory) SetRoundDelta(delta int) *FlagHandlerFactory {
+	ff.flaghandler.RoundDelta = delta
+	return ff
+}
+
 func (ff *FlagHandlerFactory) GetFlagHandler() *FlagHandler {
 	return ff.flaghandler
 }

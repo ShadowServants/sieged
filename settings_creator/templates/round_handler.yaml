@@ -1,0 +1,7 @@
+redis_host: "{{ redis_host }}" #default -- 127.0.0.1
+redis_port: "{{ redis_port }}" #default -- 6379
+redis_pool_size: 10 #default -- 10
+http_host: "{{ round_handler_host }}" #default -- 127.0.0.1
+http_port: "{{ round_handler_port }}"
+checker_name: "{{ checker_name }}" # Checker must be placed in one of PATH directories
+default_points: 1700

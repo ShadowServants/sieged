@@ -76,6 +76,7 @@ func (rh *RoundHandler) TestTeam(team_id int,round int,ch chan TeamResponse) {
 	stdout, err := cmd.Output()
 	pts,_ := rh.Points.GetPoints(strconv.Itoa(team_id))
 	if err != nil {
+		fmt.Println("Checker failed with errors",err.Error(),stdout)
 		rh.St.SetStatus(team_id,round,"Down")
 		ch <- TeamResponse{team_id,"Checker failed","Down",*pts}
 		return

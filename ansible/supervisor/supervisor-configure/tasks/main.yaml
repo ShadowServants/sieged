@@ -1,0 +1,23 @@
+---
+# tasks file for supervisor-configure
+- name: Create supervisor directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ supervisor_path }}"
+
+- name: Create supervisord conf
+  template:
+    src: "templates/supervisord.conf"
+    dest: "{{ supervisor_path }}"
+    mode: 0755
+
+- name: Copy router binary
+  copy:
+    src: "{{ base_path }}/binaries/router"
+    dest: "{{ supervisor_path }}/router"
+    mode: 0755
+    remote_src: yes
+

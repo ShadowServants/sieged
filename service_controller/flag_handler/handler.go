@@ -78,6 +78,7 @@ type FlagHandler struct {
 	RoundCached bool
 	CurrentRound int
 	RoundDelta int
+	TeamNum int
 	//pool *redigo.Pool
 }
 
@@ -121,15 +122,15 @@ func (fh *FlagHandler) CacheRound(callback func ()) {
 }
 
 func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int {
-	ap := math.Max(1.0,float64(attacker_points + 1))
-	vp := math.Max(1.0,float64(victim_points + 1))
-	if ap > vp {
-		return int(math.Exp(math.Log(15.0) * (15.0 - vp) / (15.0 - ap)))
+	if attacker_points > victim_points {
+		return fh.TeamNum
 	}
-	logattacker := math.Log2(ap) + 1
-        logvictim := math.Log2(vp) + 1
-        delta := logvictim / logattacker
-        delta_points := int(delta * 15)
+	ap := math.Max(1.0,float64(attacker_points))
+	vp := math.Max(1.0,float64(victim_points))
+	logattacker := math.Max(math.Log(ap),1)
+	logvictim := math.Max(math.Log(vp),1)
+	delta := logvictim / logattacker
+	delta_points := int(delta * float64(fh.TeamNum))
 	return delta_points
 
 }
@@ -149,7 +150,8 @@ func (fh *FlagHandler) calc(att int, vict int) int{
 	attacker.points.Points += delta
 	attacker.points.Plus += 1
 	victim.points.Minus += 1
-	victim.points.Points = helpers.MaxInt(victim.points.Points-delta,0)
+	victim.points.Points -= helpers.MinInt(victim.points.Points,delta)
+	//victim.points.Points = helpers.MaxInt(victim.points.Points-delta,0)
 	go fh.StoreData(*attacker,*victim)
 	return delta
 
