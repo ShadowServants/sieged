@@ -10,13 +10,13 @@ type HandlerResponse struct {
 	Type string `json:"type"`
 	Initiator int `json:"initiator"`
 	Target int `json:"target"`
-	Delta int `json:"delta"`
+	Delta float64 `json:"delta"`
 	Reason string `json:"reason"`
 }
 
 
-func (hr *HandlerResponse) SetType(type_str string) *HandlerResponse {
-	hr.Type = type_str
+func (hr *HandlerResponse) SetType(typeStr string) *HandlerResponse {
+	hr.Type = typeStr
 	return hr
 }
 
@@ -25,7 +25,7 @@ func (hr *HandlerResponse) SetInitiator(initiator int) *HandlerResponse {
 	return hr
 }
 
-func (hr *HandlerResponse) SetDelta(delta int) *HandlerResponse {
+func (hr *HandlerResponse) SetDelta(delta float64) *HandlerResponse {
 	hr.Delta = delta
 	return hr
 }

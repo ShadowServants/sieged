@@ -14,7 +14,7 @@ type FlagData struct {
 func LoadsFlagData(s string) (*FlagData, error) {
 	p := FlagData{}
 	if err := json.Unmarshal([]byte(s), &p); err != nil {
-		return nil,errors.New("Cant unmarshall json flagData")
+		return nil,errors.New("failed_convert_json")
     }
 	return &p,nil
 }

@@ -28,7 +28,7 @@ func main(){
 
 	Rp := new(storage.RadixPool)
 	Rp.Build(viper.GetString("redis_host"),viper.GetString("redis_port"),viper.GetInt("redis_pool_size"))
-	radixFactory := storage.RadixFactory{Rp}
+	radixFactory := storage.RadixFactory{Pool: Rp}
 
 	factory := round_handler.NewHandlerFactory()
 	factory.SetIpStorage(radixFactory.GetHsetStorage("team_to_ip"))
@@ -37,25 +37,25 @@ func main(){
 	factory.SetStatusStorage(radixFactory.GetHsetStorage("statuses"))
 	factory.SetTeamStorage(radixFactory.GetHsetStorage("teams_id"))
 
-	r_handler := factory.GetHandler()
-	viper_teams := viper.New()
-	viper_teams.SetConfigFile("teams.yaml")
-	viper_teams.SetConfigType("yaml")
-	viper_teams.AddConfigPath(".")
+	rHandler := factory.GetHandler()
+	viperTeams := viper.New()
+	viperTeams.SetConfigFile("teams.yaml")
+	viperTeams.SetConfigType("yaml")
+	viperTeams.AddConfigPath(".")
 
 	var teams []team_list.TeamIP
-	err = viper_teams.ReadInConfig() // Find and read the config file
+	err = viperTeams.ReadInConfig() // Find and read the config file
 	helpers.FailOnError(err,"Failed to read teams.yaml")
 
-	err = viper_teams.UnmarshalKey("teams",&teams)
+	err = viperTeams.UnmarshalKey("teams",&teams)
 	helpers.FailOnError(err,"Cant parse team list")
 
-	r_handler.LoadsTeamsIp(teams)
-	r_handler.DefaultPoints = viper.GetInt("default_points")
-	r_handler.CheckerName = viper.GetString("checker_name")
+	rHandler.LoadsTeamsIp(teams)
+	rHandler.DefaultPoints = viper.GetInt("default_points")
+	rHandler.CheckerName = viper.GetString("checker_name")
 	server := rpc.NewRpcServer(viper.GetString("http_host"),viper.GetString("http_port"))
 
-	server.Register("/round",r_handler)
+	server.Register("/round", rHandler)
 	server.Handle()
 
 

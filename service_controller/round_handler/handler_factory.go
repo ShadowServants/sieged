@@ -4,43 +4,44 @@ import (
 	"hackforces/libs/storage"
 	"hackforces/service_controller/flag_handler"
 	"hackforces/libs/statusstorage"
+	"hackforces/libs/round_storage"
 )
 
 type HandlerFactory struct {
-	round_h *RoundHandler
+	roundH *RoundHandler
 }
 
 func NewHandlerFactory() *HandlerFactory{
 	rhf := new(HandlerFactory)
-	rhf.round_h = NewRoundHandler()
+	rhf.roundH = NewRoundHandler()
 	return rhf
 }
 
-func (round_f *HandlerFactory) SetIpStorage(st storage.Storage) *HandlerFactory{
-	round_f.round_h.IpStorage = st
-	return round_f
+func (roundF *HandlerFactory) SetIpStorage(st storage.Storage) *HandlerFactory{
+	roundF.roundH.IpStorage = st
+	return roundF
 }
 
-func (round_f *HandlerFactory) SetTeamStorage(st storage.Storage) *HandlerFactory {
-	round_f.round_h.TeamStorage = st
-	return round_f
+func (roundF *HandlerFactory) SetTeamStorage(st storage.Storage) *HandlerFactory {
+	roundF.roundH.TeamStorage = st
+	return roundF
 }
 
-func (round_f *HandlerFactory) SetPointStorage(st storage.Storage) *HandlerFactory {
-	round_f.round_h.Points = &flaghandler.PointsStorage{st}
-	return round_f
+func (roundF *HandlerFactory) SetPointStorage(st storage.Storage) *HandlerFactory {
+	roundF.roundH.Points = &flaghandler.PointsStorage{St: st}
+	return roundF
 }
 
-func (round_f *HandlerFactory) SetStatusStorage(st storage.Storage) *HandlerFactory {
-	round_f.round_h.St = statusstorage.NewStatusStorage(st)
-	return round_f
+func (roundF *HandlerFactory) SetStatusStorage(st storage.Storage) *HandlerFactory {
+	roundF.roundH.St = statusstorage.NewStatusStorage(st)
+	return roundF
 }
 
-func (round_f *HandlerFactory) SetRoundStorage(st storage.Storage) *HandlerFactory {
-	round_f.round_h.Rounds = &flaghandler.RoundStorage{st}
-	return round_f
+func (roundF *HandlerFactory) SetRoundStorage(st storage.Storage) *HandlerFactory {
+	roundF.roundH.Rounds = &round_storage.RoundStorage{St: st}
+	return roundF
 }
 
-func (round_f *HandlerFactory) GetHandler() *RoundHandler{
-	return round_f.round_h
+func (roundF *HandlerFactory) GetHandler() *RoundHandler{
+	return roundF.roundH
 }

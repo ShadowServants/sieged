@@ -20,12 +20,12 @@ type FlagRouter struct {
 	//IpStorage storage.Storage
 	IpStorage map[string]string
 	//Storage storage.Storage
-	team_num int
-	serviceMap map[string]string
-	reason_map map[string]string
+	teamNum              int
+	serviceMap           map[string]string
+	reasonMap            map[string]string
 	VisualisationEnabled bool
-	VisualisationUrl string
-	pool map[string]*tcp_pool.TcpConnectionPool
+	VisualisationUrl     string
+	pool                 map[string]*tcp_pool.TcpConnectionPool
 }
 
 func (fr *FlagRouter) SetVisualisation(url string) *FlagRouter {
@@ -35,10 +35,10 @@ func (fr *FlagRouter) SetVisualisation(url string) *FlagRouter {
 }
 
 
-func NewFlagRouter(team_num int) *FlagRouter{
+func NewFlagRouter(teamNum int) *FlagRouter{
 	fr := new(FlagRouter)
-	fr.team_num = team_num
-	fr.reason_map =  map[string]string {
+	fr.teamNum = teamNum
+	fr.reasonMap =  map[string]string {
 		"self":"That's your own flag",
 		"invalid":"That's bad flag",
 		"already_submitted":"You already submit this flag",
@@ -54,8 +54,8 @@ func NewFlagRouter(team_num int) *FlagRouter{
 
 }
 
-func (fr *FlagRouter) AddTeam(ip_cidr string,team_id string) {
-		fr.IpStorage[ip_cidr] = team_id
+func (fr *FlagRouter) AddTeam(ipCidr string, teamId string) {
+		fr.IpStorage[ipCidr] = teamId
 }
 
 //func (fr *FlagRouter) SetIpStorage(st storage.Storage) *FlagRouter{
@@ -68,17 +68,17 @@ func (fr *FlagRouter) getHandler(key string) (*tcp_pool.TcpConnectionPool,error)
 		if pool, ok := fr.pool[key]; ok {
 			return pool, nil
 		}
-		return nil, errors.New("Handler not found")
+		return nil, errors.New("handler not found")
 	}
 
 	//data_str := fr.Storage.Get("handlers")
 	//TODO::Add unjson str and return
-	return nil,nil
+	return nil,errors.New("no services found")
 }
 
 func (fr *FlagRouter) getTeamNums() int {
-	if fr.team_num != 0 { //Get from cache
-		return fr.team_num
+	if fr.teamNum != 0 { //Get from cache
+		return fr.teamNum
 	}
 	return 0
 	//num, _ := fr.Storage.Get("team_num")
@@ -87,11 +87,11 @@ func (fr *FlagRouter) getTeamNums() int {
 	//return num_int
 }
 
-func (fr *FlagRouter) RegisterHandler(service_prefix string,service_ip string) {
-	fr.serviceMap[service_prefix] = service_ip
-	ip_port := strings.Split(service_ip,":")
-	ip, port := ip_port[0],ip_port[1]
-	fr.pool[service_prefix] = tcp_pool.NewTcpPool(ip,port,fr.getTeamNums()*5)
+func (fr *FlagRouter) RegisterHandler(servicePrefix string, serviceIp string) {
+	fr.serviceMap[servicePrefix] = serviceIp
+	ipPort := strings.Split(serviceIp,":")
+	ip, port := ipPort[0], ipPort[1]
+	fr.pool[servicePrefix] = tcp_pool.NewTcpPool(ip,port,fr.getTeamNums()*5)
 
 }
 
@@ -121,15 +121,15 @@ func (fr *FlagRouter) CheckFlag(conn net.Conn,flag string, from int) string {
 	}
 	fmt.Println(response)
 	if sr.Successful{
-		return fmt.Sprintf("Wow! You learned %d",sr.Delta)
+		return fmt.Sprintf("Wow! You learned %6f",sr.Delta)
 	} else {
-		return fmt.Sprintf("Sorry, but %s",fr.reason_map[sr.Reason])
+		return fmt.Sprintf("Sorry, but %s",fr.reasonMap[sr.Reason])
 	}
 
 }
 
-func (fh *FlagRouter) SendToVis(data string) {
-	req, _ := http.NewRequest("POST", fh.VisualisationUrl, bytes.NewBuffer([]byte(data)))
+func (fr *FlagRouter) SendToVis(data string) {
+	req, _ := http.NewRequest("POST", fr.VisualisationUrl, bytes.NewBuffer([]byte(data)))
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
 	_, err := client.Do(req)
@@ -148,46 +148,46 @@ func (fr *FlagRouter) HandleRequest(flag string,ip string) string {
 	if from == -1 {
 		return "Sorry, but we can`t find your team"
 	}
-	first_char := flag[0]
-	handler, err := fr.getHandler(string(first_char))
+	firstChar := flag[0]
+	handler, err := fr.getHandler(string(firstChar))
 	if err != nil {
-		return "Handler not found"
+		return "Invalid flag"
 	}
 
 	conn , err := handler.Pool.Get()
 	if err != nil {
-		fmt.Println("Connection pool is full for service",first_char)
+		fmt.Println("Connection pool is full for service", firstChar)
 		return "Network is down"
 	}
 	return fr.CheckFlag(conn,flag,from)
 
 }
 
-func (fr *FlagRouter) GetTeamIdByIp(ip_raw string) int {
-    ind := strings.Index(ip_raw,":")
+func (fr *FlagRouter) GetTeamIdByIp(ipRaw string) int {
+    ind := strings.Index(ipRaw,":")
     if ind <= 0{
       ind = 1
     }
-    ip := ip_raw[:ind]
+    ip := ipRaw[:ind]
 
-    ip_bytes := net.ParseIP(ip)
+    ipBytes := net.ParseIP(ip)
     fmt.Printf("From %s \n",ip)
-    team_id_int := -1
+    teamIdInt := -1
     for key, value := range fr.IpStorage {
     	_, ipv4Net, err := net.ParseCIDR(key)
     	fmt.Printf("%s \n",ipv4Net.String())
     	if err != nil {
     		continue
 		}
-		if ipv4Net.Contains(ip_bytes) {
-			v_int, err := strconv.Atoi(value)
+		if ipv4Net.Contains(ipBytes) {
+			vInt, err := strconv.Atoi(value)
 			if err != nil {
 				continue
 			}
-			team_id_int = v_int
+			teamIdInt = vInt
 		}
 
 	}
 
-	return team_id_int
+	return teamIdInt
 }

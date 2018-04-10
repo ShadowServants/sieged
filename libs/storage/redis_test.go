@@ -11,9 +11,9 @@ import (
 func GetSimpleRedisExecutor() *RedisPoolExecutor{
 	conn,err := redis.Dial("tcp",":6379")
 	helpers.FailOnError(err,"Redis is down")
-	pool := helpers.NewPool(conn,1)
-	pool_exec := RedisPoolExecutor{pool,sync.Mutex{}}
-	return &pool_exec
+	pool := helpers.NewPool(conn)
+	poolExec := RedisPoolExecutor{pool,sync.Mutex{}}
+	return &poolExec
 
 }
 

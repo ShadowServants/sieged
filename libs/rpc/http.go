@@ -22,10 +22,10 @@ import (
 //}
 
 type HttpRpcServer struct {
-	Port string
-	Host string
-	mux *http.ServeMux
-	handler_map map[string]DataHandler
+	Port       string
+	Host       string
+	mux        *http.ServeMux
+	handlerMap map[string]DataHandler
 }
 
 func NewRpcServer(host string, port string  ) *HttpRpcServer {
@@ -36,18 +36,18 @@ func NewRpcServer(host string, port string  ) *HttpRpcServer {
 	return ht
 }
 
-type RpcRequest struct {
+type Request struct {
 	Request string
 }
 
 
 
 func (rs *HttpRpcServer) Register(url string,handler DataHandler) {
-	rs.handler_map[url] = handler
+	rs.handlerMap[url] = handler
 }
 
 func (rs *HttpRpcServer) HandleHTTP(w http.ResponseWriter,r *http.Request) {
-	var req RpcRequest
+	var req Request
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -55,7 +55,7 @@ func (rs *HttpRpcServer) HandleHTTP(w http.ResponseWriter,r *http.Request) {
 	}
 	uri := r.RequestURI
 	request := req.Request
-	hndlr, _ := rs.handler_map[uri]
+	hndlr, _ := rs.handlerMap[uri]
 	if err != nil {
 		http.Error(w,err.Error(),404)
 		return
@@ -69,7 +69,7 @@ func (rs *HttpRpcServer) HandleHTTP(w http.ResponseWriter,r *http.Request) {
 
 
 func (rs *HttpRpcServer) Build() {
-	rs.handler_map = make(map[string]DataHandler)
+	rs.handlerMap = make(map[string]DataHandler)
 	rs.mux = http.NewServeMux()
 	rs.mux.HandleFunc("/",rs.HandleHTTP)
 }

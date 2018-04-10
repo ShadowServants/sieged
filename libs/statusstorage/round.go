@@ -17,15 +17,15 @@ func NewStatusStorage(st storage.Storage) *StatusStorage{
 
 
 
-func (r *StatusStorage) GetStatus(team_id int,round int) string {
-	key_string := fmt.Sprintf("%d:%d",team_id,round)
-	a, _ := r.st.Get(key_string)
+func (r *StatusStorage) GetStatus(teamId int,round int) string {
+	keyString := fmt.Sprintf("%d:%d", teamId,round)
+	a, _ := r.st.Get(keyString)
 	return a
 }
 
-func (r *StatusStorage) SetStatus(team_id, round int,status string) {
-	key_string := fmt.Sprintf("%d:%d",team_id,round)
-	r.st.Set(key_string,status)
+func (r *StatusStorage) SetStatus(teamId, round int,status string) {
+	keyString := fmt.Sprintf("%d:%d", teamId,round)
+	r.st.Set(keyString,status)
 }
 
 

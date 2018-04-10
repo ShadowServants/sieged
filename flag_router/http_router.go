@@ -39,7 +39,7 @@ func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) 
 	return
 }
 
-func (fh *HTTPFlagRouter) StartPolling() {
-	http.HandleFunc("/",fh.handleRequest)
-	http.ListenAndServe(fh.Host+":"+fh.Port,nil)
+func (fr *HTTPFlagRouter) StartPolling() {
+	http.HandleFunc("/",fr.handleRequest)
+	http.ListenAndServe(fr.Host+":"+fr.Port,nil)
 }

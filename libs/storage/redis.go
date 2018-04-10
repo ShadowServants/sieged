@@ -8,16 +8,6 @@ import (
 	"hackforces/libs/helpers"
 )
 
-
-func GetRedisExecutor(port string,pool_size int) *RedisPoolExecutor{
-	conn,err := redis.Dial("tcp",":"+port)
-	helpers.FailOnError(err,"Redis is down")
-	pool := helpers.NewPool(conn,pool_size)
-	pool_exec := RedisPoolExecutor{pool,sync.Mutex{}}
-	return &pool_exec
-
-}
-
 type RedisPoolExecutor struct {
 	Pool *redis.Pool
 	mu sync.Mutex
@@ -27,14 +17,14 @@ type RedisPoolExecutor struct {
 func (re *RedisPoolExecutor) Exec(command string,args...string) (interface {},error) {
 	re.mu.Lock()
 	defer re.mu.Unlock()
-	real_args := make([]interface{},len(args))
+	realArgs := make([]interface{},len(args))
 	for k,v := range args {
-		real_args[k] = v
+		realArgs[k] = v
 	}
 	red := re.Pool.Get()
 
 	defer red.Close()
-	return red.Do(command,real_args...)
+	return red.Do(command, realArgs...)
 }
 
 
@@ -56,7 +46,7 @@ func (rs *BaseRedisStorage) Get(command string,args...string) (string,error) {
 	if res, ok := data.([]byte); ok {
 		return string(res),nil
 	}
-	return "", errors.New("Not string")
+	return "", errors.New("failed_convert_to_string")
 }
 
 
@@ -64,7 +54,7 @@ func (rs *BaseRedisStorage) Set(command string,args...string) () {
 	_, err := rs.Redis.Exec(command,args...)
 	if err != nil {
 		fmt.Println("BAD",command,args, err.Error())
-		helpers.FailOnError(err,"Redis error") //?
+		helpers.FailOnError(err,"redis_error") //?
 		//Write to logfile or panic ?
 		return
 	}

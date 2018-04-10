@@ -1,15 +1,13 @@
-package flaghandler
+package round_storage
 
 import (
-	"strconv"
 	"hackforces/libs/storage"
+	"strconv"
 )
 
 type RoundStorage struct {
 	St storage.Storage
 }
-
-
 
 func (r *RoundStorage) GetRound() int {
 	a, _ := r.St.Get("round")
@@ -18,7 +16,7 @@ func (r *RoundStorage) GetRound() int {
 }
 
 func (r *RoundStorage) SetRound(round int) {
-	roundstr := strconv.Itoa(round)
-	r.St.Set("round",roundstr)
-}
 
+	roundstr := strconv.Itoa(round)
+	r.St.Set("round", roundstr)
+}

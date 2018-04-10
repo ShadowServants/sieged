@@ -35,7 +35,7 @@
   branch = "refactoring_structure"
   name = "github.com/jnovikov/hackforces"
   packages = ["libs/helpers"]
-  revision = "64ae390c9a70dc662a2426e2899838878c2bf297"
+  revision = "fdf6acb194bf738d83cffd4c70c1cffad6e7c948"
 
 [[projects]]
   name = "github.com/jtolds/gls"
@@ -53,7 +53,7 @@
   branch = "master"
   name = "github.com/mediocregopher/radix.v2"
   packages = ["pool","redis"]
-  revision = "d234cfb904a91daafa4e1f92599a893b349cc0c2"
+  revision = "6a84d920965d5a55a84eeee2dc5ee2c40e9b258d"
 
 [[projects]]
   branch = "master"
@@ -119,13 +119,13 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "82aafbf43bf885069dc71b7e7c2f9d7a614d47da"
+  revision = "9167dbfd0f8e88b731dd88cbf73a270701a37bb4"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
   packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
-  revision = "88f656faf3f37f690df1a32515b479415e1a6769"
+  revision = "57961680700a5336d15015c8c50686ca5ba362a4"
 
 [[projects]]
   branch = "v2.0.0"
@@ -142,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1cf9580c48a122221b760133325ab01a3375a5c5e6ced1f0c992d3d10026d9f0"
+  inputs-digest = "ed1c0bbfed5bdb3d0220f93eb268cdba4130607ee7b0d4b9721962767fd14c1c"
   solver-name = "gps-cdcl"
   solver-version = 1

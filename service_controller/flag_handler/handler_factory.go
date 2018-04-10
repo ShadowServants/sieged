@@ -1,58 +1,58 @@
 package flaghandler
 
 import (
+	"hackforces/libs/round_storage"
+	"hackforces/libs/statusstorage"
 	"hackforces/libs/storage"
 	"hackforces/service_controller/flag_handler/flagstorage"
-	"hackforces/libs/statusstorage"
 )
 
-type FlagHandlerFactory struct {
-	flaghandler *FlagHandler
+type Factory struct {
+	handler *FlagHandler
 }
 
-func NewFlagHandlerFactory() *FlagHandlerFactory {
-	ff := new(FlagHandlerFactory)
-	ff.flaghandler = NewFlagHandler()
+func NewFlagHandlerFactory() *Factory {
+	ff := new(Factory)
+	ff.handler = NewFlagHandler()
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetRoundStorage(st storage.Storage) *FlagHandlerFactory {
+func (ff *Factory) SetRoundStorage(st storage.Storage) *Factory {
 
-	ff.flaghandler.RoundSt = &RoundStorage{st}
+	ff.handler.RoundSt = &round_storage.RoundStorage{st}
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetPointStorage(st storage.Storage) *FlagHandlerFactory {
-	ff.flaghandler.Points = &PointsStorage{st}
+func (ff *Factory) SetPointStorage(st storage.Storage) *Factory {
+	ff.handler.Points = &PointsStorage{st}
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetFlagStorage(st storage.Storage) *FlagHandlerFactory {
-	ff.flaghandler.Flags = flagstorage.NewFlagStorage(st)
+func (ff *Factory) SetFlagStorage(st storage.Storage) *Factory {
+	ff.handler.Flags = flagstorage.NewFlagStorage(st)
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetStatusStorage(st storage.Storage) *FlagHandlerFactory {
-	ff.flaghandler.StatusStorage = statusstorage.NewStatusStorage(st)
+func (ff *Factory) SetStatusStorage(st storage.Storage) *Factory {
+	ff.handler.StatusStorage = statusstorage.NewStatusStorage(st)
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetTeamFlagsSet(ks storage.KeySet) *FlagHandlerFactory {
-	ff.flaghandler.TeamFlagsSet = ks
+func (ff *Factory) SetTeamFlagsSet(ks storage.KeySet) *Factory {
+	ff.handler.TeamFlagsSet = ks
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetTeamNum(team_num int) *FlagHandlerFactory {
-	ff.flaghandler.TeamNum = team_num
+func (ff *Factory) SetTeamNum(teamNum int) *Factory {
+	ff.handler.TeamNum = teamNum
 	return ff
 }
 
-func (ff *FlagHandlerFactory) SetRoundDelta(delta int) *FlagHandlerFactory {
-	ff.flaghandler.RoundDelta = delta
+func (ff *Factory) SetRoundDelta(delta int) *Factory {
+	ff.handler.RoundDelta = delta
 	return ff
 }
 
-func (ff *FlagHandlerFactory) GetFlagHandler() *FlagHandler {
-	return ff.flaghandler
+func (ff *Factory) GetFlagHandler() *FlagHandler {
+	return ff.handler
 }
-

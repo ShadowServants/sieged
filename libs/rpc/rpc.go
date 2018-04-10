@@ -5,7 +5,7 @@ type DataHandler interface {
 	HandleRequest(string) string
 }
 
-type RpcProtocol interface {
+type Protocol interface {
 	Handle()
 }
 

@@ -24,7 +24,7 @@ func (st *SimpleStorage) Get(key string) (string,error) {
 	if data, ok := st.data[key]; ok {
 		return data,nil
 	} else {
-		return "",errors.New("Key is missing")
+		return "",errors.New("key_is_missing")
 	}
 }
 

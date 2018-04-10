@@ -16,12 +16,12 @@ type TcpRpc struct {
 
 func (tr *TcpRpc) handleRequest(conn net.Conn) {
 	buf := make([]byte, 200)
-    _, err := conn.Read(buf)
+    n, err := conn.Read(buf)
     for err == nil {
-        st := helpers.FromBytesToString(buf)
+        st := helpers.FromBytesToString(buf,n)
 		resp := tr.Handler.HandleRequest(st)
 		conn.Write([]byte(resp+"\n"))
-        _, err = conn.Read(buf)
+        n, err = conn.Read(buf)
     }
     conn.Close()
 

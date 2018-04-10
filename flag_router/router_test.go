@@ -7,11 +7,11 @@ import (
 
 
 func buildTestFlagRouter() *FlagRouter{
-	router_t := NewFlagRouter(2)
+	routerT := NewFlagRouter(2)
 	//router_t.SetIpStorage(storage.NewSimpleStorage())
-	router_t.IpStorage["127.0.1.1/24"] = "1"
-	router_t.IpStorage["127.0.2.2/24"] = "2"
-	return router_t
+	routerT.IpStorage["127.0.1.1/24"] = "1"
+	routerT.IpStorage["127.0.2.2/24"] = "2"
+	return routerT
 }
 
 var router = buildTestFlagRouter()

@@ -3,7 +3,6 @@ package team_list
 import (
 	"errors"
 	"encoding/json"
-	"gopkg.in/yaml.v2"
 )
 
 type TeamList struct {
@@ -39,12 +38,3 @@ func DumpTeamList(p *TeamList) (string, error) {
 }
 
 
-func LoadTeamsList(in []byte) ([]TeamIP,error) {
-	var team_file TeamsFile
-	err := yaml.Unmarshal(in,&team_file)
-	if err != nil {
-		return nil,err
-	}
-	return team_file.Teams, nil
-
-}

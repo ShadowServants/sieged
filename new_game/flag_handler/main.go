@@ -27,7 +27,7 @@ func main() {
 
 	Rp := new(storage.RadixPool)
 	Rp.Build(viper.GetString("redis_host"),viper.GetString("redis_port"),viper.GetInt("redis_pool_size"))
-	radixFactory := storage.RadixFactory{Rp}
+	radixFactory := storage.RadixFactory{Pool: Rp}
 
 	flagHandlerFactory := flaghandler.NewFlagHandlerFactory()
 	flagHandlerFactory.SetPointStorage(radixFactory.GetHsetStorage("points"))
@@ -37,12 +37,12 @@ func main() {
 	flagHandlerFactory.SetStatusStorage(radixFactory.GetHsetStorage("statuses"))
 	flagHandlerFactory.SetTeamNum(viper.GetInt("team_num"))
 	flagHandler := flagHandlerFactory.GetFlagHandler()
-	tcp_port := viper.GetString("tcp_port")
-	tcp_host := viper.GetString("tcp_host")
-	rpc_tcp := rpc.TcpRpc{Port: tcp_port, Addr: tcp_host,
+	tcpPort := viper.GetString("tcp_port")
+	tcpHost := viper.GetString("tcp_host")
+	rpcTcp := rpc.TcpRpc{Port: tcpPort, Addr: tcpHost,
 							Handler: flagHandler}
-	fmt.Printf("Flag Handler started on %s:%s \n", tcp_host, tcp_port)
+	fmt.Printf("Flag Handler started on %s:%s \n", tcpHost, tcpPort)
 
-	rpc_tcp.Handle()
+	rpcTcp.Handle()
 
 }

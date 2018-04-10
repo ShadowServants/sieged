@@ -33,20 +33,20 @@ func GenerateFlag() string {
 
 
 func indexHandler(w http.ResponseWriter,r *http.Request){
-	team_id := r.FormValue("team_id")
-	round_id := r.FormValue("round_id")
-	fmt.Println(team_id,round_id)
-	if team_id == "" || round_id == ""{
+	teamId := r.FormValue("team_id")
+	roundId := r.FormValue("round_id")
+	fmt.Println(teamId, roundId)
+	if teamId == "" || roundId == ""{
 		fmt.Fprint(w,"You shuld set round and team id.")
 		return
 	}
-	team_id_int,_ := strconv.Atoi(team_id)
-	round_id_int, _ := strconv.Atoi(round_id)
-	data := flagdata.FlagData{team_id_int,round_id_int}
+	teamIdInt,_ := strconv.Atoi(teamId)
+	roundIdInt, _ := strconv.Atoi(roundId)
+	data := flagdata.FlagData{Team: teamIdInt, Round: roundIdInt}
 
-	flag_json,_ := flagdata.DumpFlagData(&data)
+	flagJson,_ := flagdata.DumpFlagData(&data)
 	flag := GenerateFlag()
-	Stor.Set(flag,flag_json)
+	Stor.Set(flag, flagJson)
 
 	fmt.Fprint(w,flag)
 }
@@ -70,12 +70,15 @@ func main() {
 	Rp := new(storage.RadixPool)
 	Rp.Build(viper.GetString("redis_host"),viper.GetString("redis_port"),viper.GetInt("redis_pool_size"))
 
-	Stor = storage.HsetRadixStorage{Rp,"flags"}
+	Stor = storage.HsetRadixStorage{RadixP: Rp, SetName: "flags"}
 	http.HandleFunc("/",indexHandler)
-	http_host := viper.GetString("http_host")
-	http_port := viper.GetString("http_port")
-	fmt.Printf("Flag Adder started on %s:%s \n", http_host, http_port)
-	http.ListenAndServe(http_host+":"+http_port,nil)
+	httpHost := viper.GetString("http_host")
+	httpPort := viper.GetString("http_port")
+	fmt.Printf("Flag Adder started on %s:%s \n", httpHost, httpPort)
+	err = http.ListenAndServe(httpHost+":"+httpPort,nil)
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
 }
 
 

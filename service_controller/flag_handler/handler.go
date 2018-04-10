@@ -1,19 +1,20 @@
 package flaghandler
 
 import (
-	"hackforces/libs/flagresponse"
-	"hackforces/libs/statusstorage"
-	"hackforces/libs/helpers"
-	"sync"
-	"strconv"
-	"math"
 	"encoding/json"
 	"errors"
-	"hackforces/libs/storage"
+	"fmt"
 	"hackforces/libs/flagdata"
+	"hackforces/libs/flagresponse"
+	"hackforces/libs/helpers"
+	"hackforces/libs/round_storage"
+	"hackforces/libs/statusstorage"
+	"hackforces/libs/storage"
 	"hackforces/service_controller/flag_handler/flagstorage"
+	"math"
+	"strconv"
+	"sync"
 )
-
 
 //func handle(data string)
 
@@ -22,63 +23,55 @@ const BadFlagMessage = "invalid"
 const AlreadySubmitMessage = "already_submitted"
 const TeamNotFoundMessage = "team_not_found"
 const FlagTooOldMessage = "too_old"
-const BadTeamStatusMessage  = "not_ok"
-
 
 type TeamData struct {
-	id int
+	id     int
 	points Points
-	mu sync.Mutex
+	mu     sync.Mutex
 }
 
 type Points struct {
-	Plus int `json:"plus"`
-	Minus int `json:"minus"`
-	Points int `json:"points"`
+	Plus   int     `json:"plus"`
+	Minus  int     `json:"minus"`
+	Points float64 `json:"points"`
 }
-
-
-
 
 type TeamRequest struct {
-	Flag string  `json:"flag"`
-	Team int  `json:"team"`
-
+	Flag string `json:"flag"`
+	Team int    `json:"team"`
 }
 
-func DumpsTeamRequest(tr *TeamRequest) (string,error) {
+func DumpsTeamRequest(tr *TeamRequest) (string, error) {
 	byt, err := json.Marshal(tr)
 	if err != nil {
-		return "",err
+		return "", err
 	}
-	return string(byt),nil
+	return string(byt), nil
 }
 
-func LoadsTeamRequest(s string) (*TeamRequest, error){
+func LoadsTeamRequest(s string) (*TeamRequest, error) {
 	tr := TeamRequest{}
 	if err := json.Unmarshal([]byte(s), &tr); err != nil {
-		return nil,errors.New("Cant unmarshall json")
-    }
-	return &tr,nil
+		return nil, errors.New("json_unmarshal_error")
+	}
+	return &tr, nil
 }
 
-func NewTeamData(id int,points Points) *TeamData{
-	return &TeamData{id:id,points:points,mu:sync.Mutex{}}
+func NewTeamData(id int, points Points) *TeamData {
+	return &TeamData{id: id, points: points, mu: sync.Mutex{}}
 }
-
-
 
 type FlagHandler struct {
-	Teams map[int] *TeamData
-	Flags *flagstorage.FlagStorage
-	Points *PointsStorage
-	TeamFlagsSet storage.KeySet
-	RoundSt *RoundStorage
+	Teams         map[int]*TeamData
+	Flags         *flagstorage.FlagStorage
+	Points        *PointsStorage
+	TeamFlagsSet  storage.KeySet
+	RoundSt       *round_storage.RoundStorage
 	StatusStorage *statusstorage.StatusStorage
-	RoundCached bool
-	CurrentRound int
-	RoundDelta int
-	TeamNum int
+	RoundCached   bool
+	CurrentRound  int
+	RoundDelta    int
+	TeamNum       int
 	//pool *redigo.Pool
 }
 
@@ -93,7 +86,7 @@ func NewFlagHandler() *FlagHandler {
 
 func (fh *FlagHandler) SetRoundStorage(st storage.Storage) *FlagHandler {
 
-	fh.RoundSt = &RoundStorage{st}
+	fh.RoundSt = &round_storage.RoundStorage{st}
 	return fh
 }
 
@@ -117,50 +110,55 @@ func (fh *FlagHandler) SetTeamFlagsSet(ks storage.KeySet) *FlagHandler {
 	return fh
 }
 
-func (fh *FlagHandler) CacheRound(callback func ()) {
+func (fh *FlagHandler) CacheRound(callback func()) {
 	fh.RoundCached = true
 }
 
-func (fh *FlagHandler) calcDelta(attacker_points int,victim_points int) int {
-	if attacker_points > victim_points {
-		return fh.TeamNum
+func (fh *FlagHandler) calcDelta(attackerPoints float64, victimPoints float64) float64 {
+	if attackerPoints < victimPoints {
+		return float64(fh.TeamNum)
 	}
-	ap := math.Max(1.0,float64(attacker_points))
-	vp := math.Max(1.0,float64(victim_points))
-	logattacker := math.Max(math.Log(ap),1)
-	logvictim := math.Max(math.Log(vp),1)
+	ap := float64(attackerPoints)
+	vp := float64(victimPoints)
+	fmt.Println(ap, vp)
+	logattacker := math.Max(math.Log(ap+1), 1)
+	logvictim := math.Max(math.Log(vp+1), 1)
 	delta := logvictim / logattacker
-	delta_points := int(delta * float64(fh.TeamNum))
-	return delta_points
+	deltaPointsF := math.Exp(math.Pow(math.Log(float64(fh.TeamNum)), delta))
+	fmt.Println(deltaPointsF)
+	//delta_points := int(delta_points_f)
+	//delta_points := int(delta * float64(fh.TeamNum))
+	return deltaPointsF
 
 }
 
-
-func (fh *FlagHandler) calc(att int, vict int) int{
-	min := helpers.MinInt(att,vict)
-	max := helpers.MaxInt(att,vict)
-	attacker,_ := fh.GetTeamDataById(att)
-	victim,_ := fh.GetTeamDataById(vict)
+func (fh *FlagHandler) calc(att int, vict int) float64 {
+	min := helpers.MinInt(att, vict)
+	max := helpers.MaxInt(att, vict)
+	attacker, _ := fh.GetTeamDataById(att)
+	victim, _ := fh.GetTeamDataById(vict)
 
 	fh.Teams[min].mu.Lock()
 	fh.Teams[max].mu.Lock()
 	defer fh.Teams[min].mu.Unlock()
 	defer fh.Teams[max].mu.Unlock()
-	delta := fh.calcDelta(attacker.points.Points,victim.points.Points)
+	delta := fh.calcDelta(attacker.points.Points, victim.points.Points)
 	attacker.points.Points += delta
 	attacker.points.Plus += 1
 	victim.points.Minus += 1
-	victim.points.Points -= helpers.MinInt(victim.points.Points,delta)
+	victim.points.Points -= math.Min(victim.points.Points, delta)
 	//victim.points.Points = helpers.MaxInt(victim.points.Points-delta,0)
-	go fh.StoreData(*attacker,*victim)
+	go fh.StoreData(*attacker, *victim)
 	return delta
 
 }
 
 func (fh *FlagHandler) CheckFlag(flag string) *flagdata.FlagData {
-	if flag,err := fh.Flags.GetFlagData(flag); err == nil {
+	fmt.Println("Try to send ", flag)
+	if flag, err := fh.Flags.GetFlagData(flag); err == nil {
 		return flag
 	} else {
+		fmt.Println(err.Error())
 		return nil
 	}
 
@@ -172,21 +170,21 @@ func (fh *FlagHandler) StoreData(teams ...TeamData) {
 	}
 }
 
-func (fh *FlagHandler)  GetTeamDataById(id int) (*TeamData,error){
-	if data,ok := fh.Teams[id]; ok {
-		return data,nil
+func (fh *FlagHandler) GetTeamDataById(id int) (*TeamData, error) {
+	if data, ok := fh.Teams[id]; ok {
+		return data, nil
 	}
 	if pts, err := fh.Points.GetPoints(strconv.Itoa(id)); err == nil {
-		td := NewTeamData(id,*pts)
+		td := NewTeamData(id, *pts)
 		fh.Teams[id] = td
-		return td,nil
+		return td, nil
 	}
-	return nil,errors.New("Can't get team")
+	return nil, errors.New("team_not_found")
 }
 
-func (fr *FlagHandler) SetRoundCached(cached bool) *FlagHandler {
-	fr.RoundCached = cached
-	return fr
+func (fh *FlagHandler) SetRoundCached(cached bool) *FlagHandler {
+	fh.RoundCached = cached
+	return fh
 }
 
 func (fh *FlagHandler) GetCurrentRound() int {
@@ -197,11 +195,11 @@ func (fh *FlagHandler) GetCurrentRound() int {
 	}
 }
 
-func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool,string) {
-	if _,err := fh.GetTeamDataById(tr.Team); err != nil {
+func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool, string) {
+	if _, err := fh.GetTeamDataById(tr.Team); err != nil {
 		return false, TeamNotFoundMessage
 	}
-	exist := fh.TeamFlagsSet.Check(strconv.Itoa(tr.Team),tr.Flag)
+	exist := fh.TeamFlagsSet.Check(strconv.Itoa(tr.Team), tr.Flag)
 	if exist {
 		return false, AlreadySubmitMessage
 	}
@@ -214,38 +212,36 @@ func (fh *FlagHandler) ValidateFlag(tr *TeamRequest) (bool,string) {
 		return false, SelfFLagMessage
 	}
 	if helpers.Abs(fh.GetCurrentRound()-flag.Round) >= fh.RoundDelta {
-		return false,FlagTooOldMessage
+		return false, FlagTooOldMessage
 	}
-	if fh.StatusStorage.GetStatus(tr.Team,fh.GetCurrentRound()) != "Up" {
-		return false,BadTeamStatusMessage
-	}
-		//fmt.Println(data,err.Error())
-	 	//return false, BadTeamStatusMessage
+	//if fh.StatusStorage.GetStatus(tr.Team,fh.GetCurrentRound()) != "Up" {
+	//	return false,BadTeamStatusMessage
 	//}
-	return true,""
-
+	//fmt.Println(data,err.Error())
+	//return false, BadTeamStatusMessage
+	//}
+	return true, ""
 
 }
-
 
 func (fh *FlagHandler) SetCaptured(tr *TeamRequest) {
-	fh.TeamFlagsSet.Add(strconv.Itoa(tr.Team),tr.Flag)
+	fh.TeamFlagsSet.Add(strconv.Itoa(tr.Team), tr.Flag)
 }
 
-func (fh *FlagHandler) HandleRequest(s string) string{
-	team_request,err := LoadsTeamRequest(s)
+func (fh *FlagHandler) HandleRequest(s string) string {
+	teamRequest, err := LoadsTeamRequest(s)
 	if err != nil {
 		return "Bad request"
 	}
-	response := flagresponse.NewStealResponse().SetInitiator(team_request.Team)
-	if ok, response_text := fh.ValidateFlag(team_request); !ok {
-		response.SetReason(response_text).SetSuccessful(false).SetTarget(-1)
+	response := flagresponse.NewStealResponse().SetInitiator(teamRequest.Team)
+	if ok, responseText := fh.ValidateFlag(teamRequest); !ok {
+		response.SetReason(responseText).SetSuccessful(false).SetTarget(-1)
 		resp, _ := flagresponse.DumpHandlerResponse(response)
 		return resp
 	}
-	victim := fh.CheckFlag(team_request.Flag).Team
-	delta := fh.calc(team_request.Team,victim)
-	fh.SetCaptured(team_request)
+	victim := fh.CheckFlag(teamRequest.Flag).Team
+	delta := fh.calc(teamRequest.Team, victim)
+	fh.SetCaptured(teamRequest)
 	response.SetSuccessful(true).SetTarget(victim).SetDelta(delta)
 
 	resp, _ := flagresponse.DumpHandlerResponse(response)

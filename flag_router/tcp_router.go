@@ -5,6 +5,7 @@ import (
 	"hackforces/libs/helpers"
 	"os"
 	"fmt"
+	"strings"
 )
 
 type TcpRouter struct {
@@ -30,13 +31,14 @@ func (tr *TcpRouter) SetRouter(router *FlagRouter) *TcpRouter {
 func (tr *TcpRouter) handleRequest(conn net.Conn) {
 	conn.Write([]byte("Please enter flags, one flag per line \n"))
 	buf := make([]byte, 200)
-    _, err := conn.Read(buf)
+    n, err := conn.Read(buf)
     for err == nil {
-        st := helpers.FromBytesToString(buf)
+        st := helpers.FromBytesToString(buf,n)
         ip := conn.RemoteAddr()
+        st = strings.Split(st,"\n")[0]
 		resp := tr.Fr.HandleRequest(st,ip.String())
 		conn.Write([]byte(resp+"\n"))
-        _, err = conn.Read(buf)
+        n, err = conn.Read(buf)
     }
     conn.Close()
 

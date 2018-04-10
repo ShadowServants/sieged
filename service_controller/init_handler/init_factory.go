@@ -5,21 +5,16 @@ import (
 	"hackforces/libs/storage"
 )
 
-type InitHandlerFactory struct{
-	init_handler InitHandler
+type InitHandlerFactory struct {
+	initHandler InitHandler
 }
 
 func (ihf *InitHandlerFactory) SetTeamStorage(st storage.Storage) *InitHandlerFactory {
-	ihf.init_handler.TeamStorage = st
+	ihf.initHandler.TeamStorage = st
 	return ihf
 }
 
 func (ihf *InitHandlerFactory) SetPointStorage(st storage.Storage) *InitHandlerFactory {
-	ihf.init_handler.Ps = &flaghandler.PointsStorage{st};
-	return ihf
-}
-
-func NewInitHandlerFactory() *InitHandlerFactory{
-	ihf := new(InitHandlerFactory)
+	ihf.initHandler.Ps = &flaghandler.PointsStorage{St: st}
 	return ihf
 }

@@ -16,8 +16,8 @@ func (rf *RadixFactory) GetSimpleStorage() *SimpleRadixStorage {
 	return &SimpleRadixStorage{rf.Pool}
 }
 
-func (rf *RadixFactory) GetHsetStorage(setname string) *HsetRadixStorage {
-	return &HsetRadixStorage{rf.Pool,setname}
+func (rf *RadixFactory) GetHsetStorage(setName string) *HsetRadixStorage {
+	return &HsetRadixStorage{rf.Pool,setName}
 }
 
 

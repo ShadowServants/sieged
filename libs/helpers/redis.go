@@ -4,7 +4,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-func NewPool(conn redis.Conn,maxIdle int) *redis.Pool {
+func NewPool(conn redis.Conn) *redis.Pool {
   return &redis.Pool{
     MaxIdle: 1000,
 	MaxActive:0,
