@@ -1,0 +1,21 @@
+---
+# tasks file for settings-controllers
+
+
+- name: Copy settings for service controller
+  template:
+    src: "templates/{{ item }}"
+    dest: "{{ supervisor_path }}/{{ service_directory }}/{{ item }}"
+    mode: 0744
+  with_items:
+    - "flag_adder.yaml"
+    - "flag_handler.yaml"
+    - "round_handler.yaml"
+
+
+- name: Copy teams file
+  file:
+    src: "{{ supervisor_path }}/teams.yaml"
+    dest: "{{ supervisor_path }}/{{ service_directory }}/teams.yaml"
+    state: link
+    mode: 0744

@@ -1,0 +1,3 @@
+services:
+  - { fprefix: "T", name: "Tenebris", checker: "tenebris.py" }
+  - { fprefix: "K", hostport: "127.0.0.1:8012" }

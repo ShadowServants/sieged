@@ -1,0 +1,6 @@
+services:
+  - { fprefix: "F", hostport: "127.0.0.1:8050" }
+  - { fprefix: "V", hostport: "127.0.0.1:8051" }
+  - { fprefix: "P", hostport: "127.0.0.1:8052" }
+  - { fprefix: "M", hostport: "127.0.0.1:8053" }
+  - { fprefix: "D", hostport: "127.0.0.1:8054" }

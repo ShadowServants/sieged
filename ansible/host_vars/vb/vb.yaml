@@ -1,0 +1,6 @@
+redis_port: "6377"
+flag_handler_port: "7001"
+flag_adder_port: "5001"
+round_handler_port: "8051"
+checker_name: "vb.py"
+flag_prefix: "V"

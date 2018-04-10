@@ -1,0 +1,21 @@
+---
+# tasks file for settings-router
+
+
+- name: Copy settings for router
+  template:
+    src: "templates/{{ item }}"
+    dest: "{{ supervisor_path }}/{{ item }}"
+    mode: 0755
+  with_items:
+    - "router_config.yaml"
+
+
+- name: Copy teams file
+  copy:
+    src: "templates/teams.yaml"
+    dest: "{{ supervisor_path }}/teams.yaml"
+    mode: 0744
+
+
+

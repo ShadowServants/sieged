@@ -1,0 +1,6 @@
+redis_host: "{{ redis_host }}" #default -- 127.0.0.1
+redis_port: "{{ redis_port }}" #default -- 6379
+redis_pool_size: 10 #default -- 5
+tcp_host: "127.0.0.1" #default -- 127.0.0.1
+tcp_pool_size: 15 #default -15
+tcp_port: "{{ flag_handler_port }}"

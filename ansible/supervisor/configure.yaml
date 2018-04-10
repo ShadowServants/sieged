@@ -1,0 +1,6 @@
+---
+- hosts: service_controllers
+
+  roles:
+    - supervisor-services
+    - supervisor-configure

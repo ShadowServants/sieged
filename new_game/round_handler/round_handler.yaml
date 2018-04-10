@@ -1,0 +1,7 @@
+redis_host: "127.0.0.1" #default -- 127.0.0.1
+redis_port: "6379" #default -- 6379
+redis_pool_size: 10 #default -- 10
+http_host: "127.0.0.1" #default -- 127.0.0.1
+http_port: "9090"
+checker_name: "tenebris.py" # Checker must be placed in one of PATH directories
+default_points: 1700
