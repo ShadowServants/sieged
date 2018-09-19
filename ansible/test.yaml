@@ -1,0 +1,5 @@
+---
+- hosts: service_controllers
+  tasks:
+    - name: lolkek
+      debug: msg="{{ inventory_file }}"

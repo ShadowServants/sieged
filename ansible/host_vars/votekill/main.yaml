@@ -1,0 +1,10 @@
+redis_port: "6378"
+redis_host: "127.0.0.1"
+flag_handler_port: "7000"
+flag_adder_port: "5003"
+flag_adder_host: "127.0.0.1"
+round_handler_host: "127.0.0.1"
+round_handler_port: "8050"
+checker_name: "vote_kill.py"
+flag_prefix: "V"
+team_num: 2

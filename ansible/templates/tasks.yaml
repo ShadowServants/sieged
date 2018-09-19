@@ -1,0 +1,5 @@
+services:
+  {% for service in services %}
+  - { fprefix: "{{ service.prefix }}", name: "{{ service.name }}", hostport: "127.0.0.1:{{ service.round_handler_port }}" }
+  {% endfor %}
+

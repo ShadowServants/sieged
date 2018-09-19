@@ -1,0 +1,6 @@
+teams:
+  - { id: 1, name: "AW", server: "10.5.1.224", network: "192.168.88.248/32"}
+  - { id: 2, name: "hэcking_chmpn33s", server: "10.5.1.183", network: "192.168.88.244/32"}
+  - { id: 3, name: "Triple_A", server: "10.5.1.63", network: "192.168.88.249/32"}
+  - { id: 4, name: "UndefinedTeam", server: "10.5.1.185", network: "1.1.1.1/1" }
+  - { id: 5, name: ":'(", server: "10.5.0.169", network: "1.1.1.1/1" }

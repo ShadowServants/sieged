@@ -16,8 +16,8 @@
 
 - name: Copy router binary
   copy:
-    src: "{{ base_path }}/binaries/router"
+    src: "binaries/darwin64/router"
     dest: "{{ supervisor_path }}/router"
     mode: 0755
-    remote_src: yes
+#    remote_src: yes
 

@@ -1,14 +1,17 @@
-tcp_host: "{{ router_host }}" #default -- 0.0.0.0
-tcp_port: "{{ router_port }}" #default - 8000
-team_num: "{{ team_num }}" #Its used only for creating pool_size, default -- 20
+http_host: "{{ router_host }}" #default -- 0.0.0.0
+http_port: "{{ router_port }}" #default - 8000
+#team_num: "{{ team_num }}" #Its used only for creating pool_size, default -- 20
 redis_host: "{{ redis_host }}"  #default -- 127.0.0.1
 redis_port: "{{ redis_port }}" #default -- 6379
 redis_pool_size: 20 #default -- 20
 #visualisation_url: "http://localhost:8080"
 services:
+    {% for service in services %}
+
 #  - { fprefix: "F", hostport: "127.0.0.1:7000" }
-  - { fprefix: "V", hostport: "127.0.0.1:7000" }
-  - { fprefix: "T", hostport: "127.0.0.1:7001" }
+  - { fprefix: "{{ service.prefix }}", hostport: "127.0.0.1:{{ service.flag_handler_port }}" }
+    {% endfor %}
+#  - { fprefix: "T", hostport: "127.0.0.1:7001" }
 #  - { fprefix: "P", hostport: "127.0.0.1:7002" }
 #  - { fprefix: "M", hostport: "127.0.0.1:7003" }
 #  - { fprefix: "D", hostport: "127.0.0.1:7004" }

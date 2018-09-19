@@ -1,0 +1,10 @@
+redis_port: "6377"
+redis_host: "127.0.0.1"
+flag_handler_port: "7001"
+flag_adder_port: "5004"
+flag_adder_host: "127.0.0.1"
+round_handler_host: "127.0.0.1"
+round_handler_port: "8051"
+checker_name: "thread-checker.py"
+flag_prefix: "T"
+team_num: 2

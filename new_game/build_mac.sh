@@ -3,3 +3,5 @@ cd flag_adder && gox -osarch="darwin/amd64"  && mv flag_adder_darwin_amd64 ../..
 cd flag_handler && gox -osarch="darwin/amd64" && mv flag_handler_darwin_amd64 ../../ansible/supervisor/binaries/darwin64/flag_handler && cd ..
 cd round_handler && gox -osarch="darwin/amd64" && mv round_handler_darwin_amd64 ../../ansible/supervisor/binaries/darwin64/round_handler && cd ..
 cd router && gox -osarch="darwin/amd64" && mv router_darwin_amd64 ../../ansible/supervisor/binaries/darwin64/router  && cd ..
+cd http_router && gox -osarch="darwin/amd64" && mv http_router_darwin_amd64 ../../ansible/supervisor/binaries/darwin64/http_router  && cd ..
+cd tokens && gox -osarch="darwin/amd64" && mv tokens_darwin_amd64 ../../ansible/supervisor/binaries/darwin64/tokens  && cd ..

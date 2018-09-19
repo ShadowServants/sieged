@@ -3,10 +3,13 @@ package flag_router
 import (
 	"net/http"
 	"fmt"
+	"hackforces/libs/token"
+	"hackforces/libs/storage"
 )
 
 type HTTPFlagRouter struct {
-	Fr *FlagRouter
+	Fr   *FlagRouter
+	ts   *token.Storage
 	Port string
 	Host string
 }
@@ -26,20 +29,32 @@ func (fr *HTTPFlagRouter) SetRouter(router *FlagRouter) *HTTPFlagRouter {
 	return fr
 }
 
+func (fr *HTTPFlagRouter) SetTokenStorage(st storage.Storage) *HTTPFlagRouter {
+	fr.ts = token.NewStorage(st)
+	return fr
+}
+
 func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) {
 	flag := r.FormValue("flag")
-	if flag == "" {
-		fmt.Fprint(w,"Field flag is required")
+	tokenString := r.FormValue("token")
+	if flag == "" || tokenString == "" {
+		fmt.Fprint(w, "Fields 'flag' and 'token' are required")
 		return
 	}
-	ip := r.RemoteAddr
-	response := fr.Fr.HandleRequest(flag,ip)
-	fmt.Println(ip,flag,response)
-	fmt.Fprint(w,response)
+
+	tok, err := fr.ts.Find(tokenString)
+	if err != nil {
+		fmt.Fprint(w, "Cant find your team by token with error %s", err.Error())
+		return
+	}
+
+	response := fr.Fr.HandleFlag(flag, tok.TeamId)
+	fmt.Println(tok.TeamId, flag, response)
+	fmt.Fprint(w, response)
 	return
 }
 
 func (fr *HTTPFlagRouter) StartPolling() {
-	http.HandleFunc("/",fr.handleRequest)
-	http.ListenAndServe(fr.Host+":"+fr.Port,nil)
+	http.HandleFunc("/", fr.handleRequest)
+	http.ListenAndServe(fr.Host+":"+fr.Port, nil)
 }

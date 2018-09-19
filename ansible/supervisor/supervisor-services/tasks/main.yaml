@@ -26,14 +26,15 @@
 
 - name: Copy binaries for service
   copy:
-    src: "{{ base_path }}/binaries/{{ item }}"
+    src: "binaries/darwin64/{{ item }}"
     dest: "{{ supervisor_path }}/{{ service_directory }}/{{ item }}"
     mode: 0755
-    remote_src: yes
+#    remote_src: yes
   with_items:
     - "flag_handler"
     - "flag_adder"
     - "round_handler"
+    - "http_router"
 
 - name: Copy redis configuration
   template:
