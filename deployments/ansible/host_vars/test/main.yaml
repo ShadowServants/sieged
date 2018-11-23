@@ -1,0 +1,11 @@
+
+---
+base_path: "/Users/john/dev/go/src/sieged/test_game/"
+supervisor_path: "{{ base_path }}/supervisor"
+supervisor_host: "127.0.0.1"
+supervisor_port: "8999"
+supervisor_user: "admin"
+supervisor_password: "adminkeklol"
+service_name: "{{ inventory_hostname }}"
+service_directory: "service_controller-{{ service_name }}"
+team_num: 15

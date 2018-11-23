@@ -1,6 +1,0 @@
-redis_port: "6375"
-flag_handler_port: "7003"
-flag_adder_port: "5003"
-round_handler_port: "8053"
-checker_name: "md.py"
-flag_prefix: "M"

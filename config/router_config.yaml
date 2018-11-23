@@ -1,0 +1,11 @@
+
+tcp_host: 127.0.0.1 #default -- 0.0.0.0
+tcp_port: 8011 #default - 8000
+team_num: 20 #Its used only for creating pool_size, default -- 20
+redis_host: "127.0.0.1" #default -- 127.0.0.1
+redis_port: "6379" #default -- 6379
+redis_pool_size: 20 #default -- 20
+#visualisation_url: "http://localhost:8080"
+#services:
+#  - { fprefix: "T", hostport: "127.0.0.1:8012" }
+#  - { fprefix: "K", hostport: "127.0.0.1:8012" }

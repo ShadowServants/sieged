@@ -1,0 +1,2 @@
+teams:
+  - { id: 1, name: "AW", server: "10.5.1.224", network: "192.168.88.248/32"}

@@ -1,6 +1,0 @@
-redis_port: "6373"
-flag_handler_port: "7004"
-flag_adder_port: "5004"
-round_handler_port: "8054"
-checker_name: "dcn.py"
-flag_prefix: "D"
