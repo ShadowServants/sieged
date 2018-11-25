@@ -5,15 +5,15 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"sieged/pkg/tcp"
 	"net"
 	"net/http"
+	"sieged/pkg/tcp"
 	"strconv"
 	"strings"
 )
 
 type Router struct {
-	IpStorage map[string]string
+	IpStorage            map[string]string
 	teamNum              int
 	serviceMap           map[string]string
 	reasonMap            map[string]string
@@ -151,11 +151,14 @@ func (fr *Router) GetTeamIdByIp(ipRaw string) int {
 	}
 	ip := ipRaw[:ind]
 	ipBytes := net.ParseIP(ip)
+	if ipBytes == nil {
+		fmt.Println("Failed to parse IP ", ipRaw)
+		return -1
+	}
 	fmt.Printf("From %s \n", ip)
 	teamIdInt := -1
 	for key, value := range fr.IpStorage {
 		_, ipv4Net, err := net.ParseCIDR(key)
-		fmt.Printf("%s \n", ipv4Net.String())
 		if err != nil {
 			continue
 		}

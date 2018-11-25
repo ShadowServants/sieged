@@ -1,10 +1,10 @@
 package flaghandler
 
 import (
+	"math"
 	"sieged/internal/flags"
 	"sieged/internal/team"
 	"sieged/pkg/storage"
-	"math"
 	"testing"
 	//"fmt"
 	"fmt"
@@ -72,8 +72,8 @@ func TestFlagHandler_calc(t *testing.T) {
 		So(attackerData.Score.Minus, ShouldEqual, 0)
 		So(victimData.Score.Plus, ShouldEqual, 0)
 		So(victimData.Score.Minus, ShouldEqual, 1)
-		So(math.Round(attackerData.Score.Points), ShouldAlmostEqual, 1719)
-		So(math.Round(victimData.Score.Points), ShouldAlmostEqual, 1683.0)
+		So(attackerData.Score.Points, ShouldAlmostEqual, 1718.9852583126342)
+		So(victimData.Score.Points, ShouldAlmostEqual, 1682.7406742612416)
 	})
 	Convey("Check team 2 attacks team 1", t, func() {
 		attacker := 2
@@ -84,8 +84,8 @@ func TestFlagHandler_calc(t *testing.T) {
 		So(flagHandler.Teams[attacker].Score.Minus, ShouldEqual, 1)
 		So(flagHandler.Teams[victim].Score.Plus, ShouldEqual, 1)
 		So(flagHandler.Teams[victim].Score.Minus, ShouldEqual, 1)
-		So(math.Round(flagHandler.Teams[attacker].Score.Points), ShouldAlmostEqual, 1702)
-		So(flagHandler.Teams[victim].Score.Points, ShouldAlmostEqual, 1700)
+		So(flagHandler.Teams[attacker].Score.Points, ShouldAlmostEqual, 1701.9380468542802)
+		So(flagHandler.Teams[victim].Score.Points, ShouldAlmostEqual, 1701.5331014098717)
 	})
 	Convey("Check points zero", t, func() {
 		attacker := 1
@@ -214,7 +214,7 @@ func TestFlagHandler_HandleRequest(t *testing.T) {
 	query = `{"team": 2,"flag": "flagteam1"}`
 	Convey("Check captured flag", t, func() {
 
-		So(fl.HandleRequest(query), ShouldEqual, `{"successful":true,"type":"steal","initiator":2,"target":1,"delta":15,"reason":""}`)
+		So(fl.HandleRequest(query), ShouldEqual, `{"successful":true,"type":"steal","initiator":2,"target":1,"delta":17.259325738758434,"reason":""}`)
 	})
 	Convey("Check team try to catpure flag again", t, func() {
 		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s"}`, AlreadySubmitMessage))
