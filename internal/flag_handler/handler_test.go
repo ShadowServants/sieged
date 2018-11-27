@@ -37,7 +37,7 @@ var flagHandler = BuildTestFlagHandler()
 func TestFlagHandler_calcDelta_smaller(t *testing.T) {
 	delta := flagHandler.calcDelta(5, 10)
 	Convey("Check delta if attacker pts < victim_pts", t, func() {
-		So(delta, ShouldAlmostEqual, 4)
+		So(delta, ShouldAlmostEqual, 6)
 	})
 }
 

@@ -3,6 +3,7 @@ package flaghandler
 import (
 	"errors"
 	"fmt"
+	"math"
 	"sieged/internal/flags"
 	"sieged/internal/rounds"
 	"sieged/internal/team"
@@ -10,7 +11,6 @@ import (
 	"sieged/internal/team/status"
 	"sieged/pkg/helpers"
 	"sieged/pkg/storage"
-	"math"
 	"strconv"
 )
 
@@ -74,7 +74,7 @@ func (fh *FlagHandler) CacheRound(callback func()) {
 }
 
 func (fh *FlagHandler) R(B, A, t float64) float64 {
-	if A + B == 0 {
+	if A+B == 0 {
 		return 0.0
 	}
 
@@ -107,8 +107,8 @@ func (fh *FlagHandler) calcDelta(attacker float64, defender float64) float64 {
 	if attacker > defender && attacker > 0 {
 		r = defender * r / attacker
 	}
-	if attacker+defender < 240 {
-		r = math.Max(r, 3*math.Floor(defender/10)+1)
+	if attacker < 240 && defender < 240 {
+		r = math.Max(r, 3*(math.Floor(defender/10)+1))
 	}
 	return r
 
