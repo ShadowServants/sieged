@@ -39,7 +39,7 @@ func NewFlagHandler() *FlagHandler {
 	f.Teams = make(map[int]*team.Data)
 
 	f.RoundCached = false
-	f.RoundDelta = 5
+	f.RoundDelta = 3
 	return f
 }
 
