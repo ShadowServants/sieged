@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"sieged/internal/flags"
 	"sieged/internal/team/token"
 	"sieged/pkg/storage"
-	"net/http"
 )
 
 type HTTPFlagRouter struct {
@@ -50,7 +50,6 @@ func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) 
 	}
 
 	response := fr.Fr.HandleFlag(flag, tok.TeamId)
-	fmt.Println(tok.TeamId, flag, response)
 	fmt.Fprint(w, response)
 	return
 }

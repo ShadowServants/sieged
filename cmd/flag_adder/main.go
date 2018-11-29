@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
+	"net/http"
 	"sieged/internal/flags"
 	"sieged/pkg/helpers"
 	"sieged/pkg/random"
 	"sieged/pkg/storage"
-	"net/http"
 	"strconv"
 )
 
@@ -22,7 +23,7 @@ func GenerateFlag() string {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	teamId := r.FormValue("team_id")
 	roundId := r.FormValue("round_id")
-	fmt.Println(teamId, roundId)
+	log.Println(teamId, roundId)
 	if teamId == "" || roundId == "" {
 		fmt.Fprint(w, "You shuld set round and team id.")
 		return
@@ -60,9 +61,9 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	httpHost := viper.GetString("http_host")
 	httpPort := viper.GetString("http_port")
-	fmt.Printf("Flag Adder started on %s:%s \n", httpHost, httpPort)
+	log.Printf("Flag Adder started on %s:%s \n", httpHost, httpPort)
 	err = http.ListenAndServe(httpHost+":"+httpPort, nil)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 	}
 }

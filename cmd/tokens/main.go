@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"sieged/internal/team"
 	"sieged/internal/team/token"
 	"sieged/pkg/helpers"
@@ -50,6 +50,6 @@ func main() {
 	for _, currentTeam := range teams {
 		s, err := ts.FindById(currentTeam.Id)
 		helpers.FailOnError(err, "Failed to get token by id")
-		fmt.Printf("%d. %s: %s \n", currentTeam.Id, currentTeam.Name, s.Token)
+		log.Printf("%d. %s: %s \n", currentTeam.Id, currentTeam.Name, s.Token)
 	}
 }

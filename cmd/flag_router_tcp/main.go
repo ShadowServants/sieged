@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
+	"log"
+	"os"
 	"sieged/internal/flags"
 	"sieged/internal/team"
 	"sieged/pkg/helpers"
@@ -41,7 +42,7 @@ func main() {
 
 	for _, service := range services {
 		print(service.FPrefix)
-		routerHandler.RegisterHandler(service.FPrefix, service.HostPort)
+		routerHandler.RegisterTCPHandler(service.FPrefix, service.HostPort)
 	}
 
 	viperTeams := viper.New()
@@ -59,12 +60,20 @@ func main() {
 		routerHandler.AddTeam(t.Network, strconv.Itoa(t.Id))
 	}
 
-	fmt.Print("Ip to team -- ", routerHandler.IpStorage)
+	log.Print("Ip to team -- ", routerHandler.IpStorage)
 	host := viper.GetString("host")
 	port := viper.GetString("port")
 	if viper.IsSet("visualisation_url") {
 		routerHandler.SetVisualisation(viper.GetString("visualisation_url"))
 
+	}
+	if viper.IsSet("attack_logs") {
+		f, err := os.OpenFile(viper.GetString("attack_logs"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("Cant opening log file: %v", err.Error())
+		}
+		defer f.Close()
+		routerHandler.SetLogger(f)
 	}
 	tcpRouter := new(TcpRouter).SetHost(host).SetPort(port).SetRouter(routerHandler)
 	tcpRouter.StartPolling()

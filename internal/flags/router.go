@@ -1,12 +1,14 @@
 package flags
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"net"
 	"net/http"
+	"os"
 	"sieged/pkg/tcp"
 	"strconv"
 	"strings"
@@ -15,17 +17,21 @@ import (
 type Router struct {
 	IpStorage            map[string]string
 	teamNum              int
-	serviceMap           map[string]string
 	reasonMap            map[string]string
 	VisualisationEnabled bool
 	VisualisationUrl     string
-	pool                 map[string]*tcp.ConnectionPool
+	handlerMap           map[string]Handler
+	attacksLogger        *log.Logger
 }
 
 func (fr *Router) SetVisualisation(url string) *Router {
 	fr.VisualisationUrl = url
 	fr.VisualisationEnabled = true
 	return fr
+}
+
+func (fr *Router) SetLogger(writer io.Writer) {
+	fr.attacksLogger = log.New(writer, "Attack: ", log.Ldate|log.Ltime)
 }
 
 func NewRouter(teamNum int) *Router {
@@ -39,8 +45,7 @@ func NewRouter(teamNum int) *Router {
 		"too_old":           "flag is too old",
 	}
 	fr.VisualisationEnabled = false
-	fr.serviceMap = make(map[string]string)
-	fr.pool = make(map[string]*tcp.ConnectionPool)
+	fr.handlerMap = make(map[string]Handler)
 	fr.IpStorage = make(map[string]string)
 	return fr
 
@@ -50,10 +55,10 @@ func (fr *Router) AddTeam(ipCidr string, teamId string) {
 	fr.IpStorage[ipCidr] = teamId
 }
 
-func (fr *Router) getHandler(key string) (*tcp.ConnectionPool, error) {
-	if len(fr.serviceMap) != 0 {
-		if pool, ok := fr.pool[key]; ok {
-			return pool, nil
+func (fr *Router) getHandler(key string) (Handler, error) {
+	if len(fr.handlerMap) != 0 {
+		if h, ok := fr.handlerMap[key]; ok {
+			return h, nil
 		}
 		return nil, errors.New("handler not found")
 	}
@@ -67,44 +72,26 @@ func (fr *Router) getTeamNum() int {
 	return 0
 }
 
-func (fr *Router) RegisterHandler(servicePrefix string, serviceIp string) {
-	fr.serviceMap[servicePrefix] = serviceIp
-	ipPort := strings.Split(serviceIp, ":")
-	ip, port := ipPort[0], ipPort[1]
-	fr.pool[servicePrefix] = tcp.NewPool(ip, port, fr.getTeamNum()*5)
-
+func (fr *Router) RegisterHandler(servicePrefix string, handler Handler) {
+	fr.handlerMap[servicePrefix] = handler
 }
 
-func (fr *Router) CheckFlag(conn net.Conn, flag string, from int) string {
-	tr := Request{Flag: flag, Team: from}
-	data, err := DumpRequest(&tr)
-	if err != nil {
-		return "invalid data format"
-	}
-	_, err = fmt.Fprintf(conn, data)
-	if err != nil {
-		fmt.Println("Service flag_handler is down ")
-		return "try again later"
-	}
-	response, err := bufio.NewReader(conn).ReadString('\n')
-	if err != nil {
-		fmt.Println("Cant read response from flag_handler")
-		return "try again later"
-	}
-	sr, err := LoadsResponse(response)
-	if err != nil {
-		fmt.Println("Cant loads response from flag_handler")
-		return "try again later"
-	}
-	if fr.VisualisationEnabled {
-		fr.SendToVis(response)
-	}
-	if sr.Successful {
-		return fmt.Sprintf("Accepted. %6f flag points", sr.Delta)
-	} else {
-		return fmt.Sprintf("Denied: %s", fr.reasonMap[sr.Reason])
-	}
+func (fr *Router) RegisterTCPHandler(servicePrefix string, serviceIp string) {
+	ipPort := strings.Split(serviceIp, ":")
+	ip, port := ipPort[0], ipPort[1]
+	handler := &TcpHandler{tcp.NewPool(ip, port, fr.getTeamNum()*5)}
+	fr.RegisterHandler(servicePrefix, handler)
+}
 
+func (fr *Router) processSteal(attack *Response) {
+	json, _ := DumpResponse(attack)
+	if fr.VisualisationEnabled {
+		fr.SendToVis(json)
+	}
+	if fr.attacksLogger == nil {
+		fr.SetLogger(os.Stdout)
+	}
+	fr.attacksLogger.Println(json)
 }
 
 func (fr *Router) SendToVis(data string) {
@@ -113,7 +100,7 @@ func (fr *Router) SendToVis(data string) {
 	client := &http.Client{}
 	_, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Failed to send to visualisation")
+		log.Println("Failed to send to visualisation")
 	}
 
 }
@@ -125,12 +112,26 @@ func (fr *Router) HandleFlag(flag string, id int) string {
 		return "invalid flag"
 	}
 
-	conn, err := handler.Pool.Get()
-	if err != nil {
-		fmt.Println("Connection pool is full for service", firstChar)
-		return "network is down try again later"
+	response, err := handler.CheckFlag(flag, id)
+	if err == poolFullError {
+		log.Println("Connection pool is full for service", firstChar)
+		return "try again later"
 	}
-	return fr.CheckFlag(conn, flag, id)
+	if err == poolReadError {
+		log.Println("Connection is down for service", firstChar)
+		return "try again later"
+	}
+	if err != nil {
+		log.Println("Service:", firstChar, err.Error())
+		return "try again later"
+	}
+
+	if response.Successful {
+		fr.processSteal(response)
+		return fmt.Sprintf("Accepted. %6f flag points", response.Delta)
+	} else {
+		return fmt.Sprintf("Denied: %s", fr.reasonMap[response.Reason])
+	}
 }
 
 func (fr *Router) HandleRequest(flag string, ip string) string {
@@ -152,10 +153,9 @@ func (fr *Router) GetTeamIdByIp(ipRaw string) int {
 	ip := ipRaw[:ind]
 	ipBytes := net.ParseIP(ip)
 	if ipBytes == nil {
-		fmt.Println("Failed to parse IP ", ipRaw)
+		log.Println("Failed to parse IP ", ipRaw)
 		return -1
 	}
-	fmt.Printf("From %s \n", ip)
 	teamIdInt := -1
 	for key, value := range fr.IpStorage {
 		_, ipv4Net, err := net.ParseCIDR(key)

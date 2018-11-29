@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/spf13/viper"
+	"log"
+	"os"
 	"sieged/internal/flags"
 	"sieged/internal/team"
 	"sieged/pkg/helpers"
@@ -39,8 +41,7 @@ func main() {
 	routerHandler := flags.NewRouter(viper.GetInt("team_num"))
 
 	for _, service := range services {
-		print(service.FPrefix)
-		routerHandler.RegisterHandler(service.FPrefix, service.HostPort)
+		routerHandler.RegisterTCPHandler(service.FPrefix, service.HostPort)
 	}
 
 	viperTeams := viper.New()
@@ -63,6 +64,15 @@ func main() {
 
 	if viper.IsSet("visualisation_url") {
 		routerHandler.SetVisualisation(viper.GetString("visualisation_url"))
+	}
+
+	if viper.IsSet("attack_logs") {
+		f, err := os.OpenFile(viper.GetString("attack_logs"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("Cant opening log file: %v", err.Error())
+		}
+		defer f.Close()
+		routerHandler.SetLogger(f)
 	}
 
 	httpRouter := new(HTTPFlagRouter).SetHost(httpHost).SetPort(httpPort).SetRouter(routerHandler).SetTokenStorage(radixFactory.GetHsetStorage("tokens"))

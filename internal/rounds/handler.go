@@ -3,12 +3,12 @@ package rounds
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"log"
+	"os/exec"
 	"sieged/internal/team"
 	"sieged/internal/team/score"
 	"sieged/internal/team/status"
 	"sieged/pkg/storage"
-	"os/exec"
 	"strconv"
 	"sync"
 	"time"
@@ -56,7 +56,7 @@ func (rh *Handler) TestTeam(teamId int, round int, ch chan team.Status) {
 	stdout, err := cmd.Output()
 	pts, _ := rh.ScoreStorage.GetPoints(strconv.Itoa(teamId))
 	if err != nil {
-		fmt.Println("Checker failed with errors", err.Error(), string(stdout))
+		log.Println("Checker failed with errors", err.Error(), string(stdout))
 		rh.St.SetStatus(teamId, round, "Down")
 		ch <- team.Status{TeamId: teamId, StatusMessage: "Timeout", Status: "Down", Points: *pts}
 		return
@@ -85,7 +85,6 @@ func (rh *Handler) GetTeams() []int {
 	if err != nil {
 		return nil
 	}
-	fmt.Println(teams)
 	rh.TeamIds = teams.Teams
 	return teams.Teams
 }
@@ -106,7 +105,7 @@ func (rh *Handler) CheckTeams(roundNum int) string {
 	for v := range ch {
 		responses = append(responses, v)
 	}
-	fmt.Println(responses)
+	log.Printf("Responses for round %d: %v", roundNum, responses)
 	rr := Response{Responses: responses}
 	byt, err := json.Marshal(&rr)
 	if err != nil {

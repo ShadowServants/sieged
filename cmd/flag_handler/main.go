@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"sieged/internal/flag_handler"
 	"sieged/pkg/helpers"
 	"sieged/pkg/rpc"
@@ -40,7 +40,7 @@ func main() {
 	tcpHost := viper.GetString("tcp_host")
 	rpcTcp := rpc.TcpRpc{Port: tcpPort, Addr: tcpHost,
 		Handler: flagHandler}
-	fmt.Printf("Flag Handler started on %s:%s \n", tcpHost, tcpPort)
+	log.Printf("Flag Handler started on %s:%s \n", tcpHost, tcpPort)
 
 	rpcTcp.Handle()
 

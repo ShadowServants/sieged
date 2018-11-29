@@ -2,7 +2,7 @@ package flaghandler
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"math"
 	"sieged/internal/flags"
 	"sieged/internal/rounds"
@@ -140,7 +140,7 @@ func (fh *FlagHandler) CheckFlag(flag string) *flags.Data {
 	if flag, err := fh.Flags.GetData(flag); err == nil {
 		return flag
 	} else {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil
 	}
 

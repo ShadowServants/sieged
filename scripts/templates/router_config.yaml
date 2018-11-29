@@ -5,6 +5,7 @@ redis_host: "{{ redis_host }}"  #default -- 127.0.0.1
 redis_port: "{{ redis_port }}" #default -- 6379
 redis_pool_size: 20 #default -- 20
 #visualisation_url: "http://localhost:8080"
+attack_logs: attacks.log
 services:
   {% for service in services %}
 
