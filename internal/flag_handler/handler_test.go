@@ -204,20 +204,20 @@ func TestFlagHandler_HandleRequest(t *testing.T) {
 	fl.Flags.SetData("flagteam1_1", &fd2)
 	query := `{"team": 2,"flag": "notflag"}`
 	Convey("Check team solve bad flag", t, func() {
-		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s"}`, BadFlagMessage))
+		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s","service":"n"}`, BadFlagMessage))
 	})
 	query = `{"team": 1,"flag": "flagteam1"}`
 	Convey("Check team own flag", t, func() {
-		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":1,"target":-1,"delta":0,"reason":"%s"}`, SelfFLagMessage))
+		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":1,"target":-1,"delta":0,"reason":"%s","service":"f"}`, SelfFLagMessage))
 
 	})
 	query = `{"team": 2,"flag": "flagteam1"}`
 	Convey("Check captured flag", t, func() {
 
-		So(fl.HandleRequest(query), ShouldEqual, `{"successful":true,"type":"steal","initiator":2,"target":1,"delta":17.259325738758434,"reason":""}`)
+		So(fl.HandleRequest(query), ShouldEqual, `{"successful":true,"type":"steal","initiator":2,"target":1,"delta":17.259325738758434,"reason":"","service":"f"}`)
 	})
 	Convey("Check team try to catpure flag again", t, func() {
-		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s"}`, AlreadySubmitMessage))
+		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s","service":"f"}`, AlreadySubmitMessage))
 
 		//So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"ok":false,"text":"%s"}`,AlreadySubmitMessage))
 		//So(fl.HandleRequest(query),ShouldEqual,AlreadySubmitMessage)
@@ -225,7 +225,7 @@ func TestFlagHandler_HandleRequest(t *testing.T) {
 	fl.RoundSt.SetRound(6)
 	query = `{"team": 2,"flag": "flagteam1_1"}`
 	Convey("Check flag is too old", t, func() {
-		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s"}`, FlagTooOldMessage))
+		So(fl.HandleRequest(query), ShouldEqual, fmt.Sprintf(`{"successful":false,"type":"steal","initiator":2,"target":-1,"delta":0,"reason":"%s","service":"f"}`, FlagTooOldMessage))
 
 		//So(fl.HandleRequest(query),ShouldEqual,fmt.Sprintf(`{"ok":false,"text":"%s"}`,FlagTooOldMessage))
 		//So(fl.HandleRequest(query),ShouldEqual,FlagTooOldMessage)

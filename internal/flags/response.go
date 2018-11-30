@@ -6,14 +6,14 @@ import (
 )
 
 type Response struct {
-	Successful bool `json:"successful"`
-	Type string `json:"type"`
-	Initiator int `json:"initiator"`
-	Target int `json:"target"`
-	Delta float64 `json:"delta"`
-	Reason string `json:"reason"`
+	Successful bool    `json:"successful"`
+	Type       string  `json:"type"`
+	Initiator  int     `json:"initiator"`
+	Target     int     `json:"target"`
+	Delta      float64 `json:"delta"`
+	Reason     string  `json:"reason"`
+	Service    string  `json:"service"`
 }
-
 
 func (hr *Response) SetType(typeStr string) *Response {
 	hr.Type = typeStr
@@ -45,6 +45,11 @@ func (hr *Response) SetTarget(target int) *Response {
 	return hr
 }
 
+func (hr *Response) SetService(service string) *Response {
+	hr.Service = service
+	return hr
+}
+
 func StealResponse() *Response {
 	hr := new(Response)
 	hr.Type = "steal"
@@ -53,15 +58,15 @@ func StealResponse() *Response {
 func DumpResponse(p *Response) (string, error) {
 	byt, err := json.Marshal(p)
 	if err != nil {
-		return "",err
+		return "", err
 	}
-	return string(byt),nil
+	return string(byt), nil
 }
 
 func LoadsResponse(s string) (*Response, error) {
 	p := Response{}
 	if err := json.Unmarshal([]byte(s), &p); err != nil {
-		return nil,errors.New("cant_loads_flags_response")
+		return nil, errors.New("cant_loads_flags_response")
 	}
-	return &p,nil
+	return &p, nil
 }

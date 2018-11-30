@@ -209,7 +209,7 @@ func (fh *FlagHandler) HandleRequest(s string) string {
 	if err != nil {
 		return "Bad request"
 	}
-	response := flags.StealResponse().SetInitiator(teamRequest.Team)
+	response := flags.StealResponse().SetInitiator(teamRequest.Team).SetService(string(teamRequest.Flag[0]))
 	if ok, responseText := fh.ValidateFlag(teamRequest); !ok {
 		response.SetReason(responseText).SetSuccessful(false).SetTarget(-1)
 		resp, _ := flags.DumpResponse(response)
