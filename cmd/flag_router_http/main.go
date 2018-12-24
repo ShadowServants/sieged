@@ -59,13 +59,12 @@ func main() {
 		routerHandler.AddTeam(t.Network, strconv.Itoa(t.Id))
 	}
 
-	httpPort := viper.GetString("host")
-	httpHost := viper.GetString("port")
+	httpHost := viper.GetString("host")
+	httpPort := viper.GetString("port")
 
 	if viper.IsSet("visualisation_url") {
 		routerHandler.SetVisualisation(viper.GetString("visualisation_url"))
 	}
-
 	if viper.IsSet("attack_logs") {
 		f, err := os.OpenFile(viper.GetString("attack_logs"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"sieged/internal/flags"
 	"sieged/internal/team/token"
@@ -56,5 +57,5 @@ func (fr *HTTPFlagRouter) handleRequest(w http.ResponseWriter, r *http.Request) 
 
 func (fr *HTTPFlagRouter) StartPolling() {
 	http.HandleFunc("/", fr.handleRequest)
-	http.ListenAndServe(fr.Host+":"+fr.Port, nil)
+	log.Fatal(http.ListenAndServe(fr.Host+":"+fr.Port, nil))
 }
